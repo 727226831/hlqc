@@ -141,7 +141,7 @@ public class LoginActivity extends BaseActivity {
                                     }
                                     break;
                                 case 500:
-                                    Toast.makeText(LoginActivity.this,"服务器遇到错误，无法完成请求。 ",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this,"hello world ",Toast.LENGTH_LONG).show();
 
                                     break;
                             }

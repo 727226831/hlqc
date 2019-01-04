@@ -1,7 +1,6 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view.warehousing;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,8 +9,6 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -25,17 +22,16 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.Url.Untils;
-import com.example.storescontrol.Url.iUrl;
 import com.example.storescontrol.bean.ArrivalHeadBean;
 import com.example.storescontrol.bean.DetailsBean;
 import com.example.storescontrol.databinding.ActivityProductionwarehousingBinding;
+import com.example.storescontrol.view.BaseActivity;
+import com.example.storescontrol.view.ScanActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -58,14 +54,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * 生产/采购 入库
@@ -187,7 +179,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
             if (uri == null) {
                 if (photoUri != null) {
                     uri = photoUri;
-                    Log.i("uri--->",uri.getPath());
+
 
 
                     uploadBatchPicture(file.getAbsolutePath());
@@ -215,7 +207,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                     case 1://存货编码
 
                         if(code.contains("$")){
-                            binding.etBatch.setText(stringScan);
+                            binding.etBatch.setText(code);
                             getData(code);
                         }else {
                             Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
@@ -236,7 +228,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
      * @param code
      */
     private void getData(String code){
-        stringScan=binding.etBatch.getText().toString();
+        stringScan=code;
         if(code.isEmpty()){
             return;
         }
@@ -282,6 +274,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                                 getArrivalHeadBycode(ccode);
                             }
                         }else {
+
                             Toast.makeText(ProductionwarehousingActivity.this,"未找到数据",Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -343,6 +336,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                                 submit();
                             }
                         }else {
+
                             Toast.makeText(ProductionwarehousingActivity.this,"未找到数据",Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -668,7 +662,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         if(isCheck){
             stringscandata=sharedPreferences.getString("checkscan","");
         }else {
-            stringscandata=sharedPreferences.getString("scan","");
+            stringscandata=sharedPreferences.getString("putscan","");
         }
 
 
@@ -683,7 +677,8 @@ public class ProductionwarehousingActivity extends BaseActivity {
         if(stringScan==null){
             return;
         }
-        if(stringscandata.contains(stringScan)){
+
+        if(stringscandata.contains(stringScan) ){
             Toast.makeText(ProductionwarehousingActivity.this, "此二维码数据已添加", Toast.LENGTH_LONG).show();
             binding.etBatch.setText("");
             isSelected = true;
@@ -869,7 +864,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 if(t.getMessage().equals("timeout")){
                     Toast.makeText(ProductionwarehousingActivity.this,"连接超时",Toast.LENGTH_LONG).show();
                 }
-                Log.i("upload message-->",t.getLocalizedMessage()+"/"+t.getMessage());
+
             } });
     }
 

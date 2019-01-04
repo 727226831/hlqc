@@ -1,4 +1,4 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.storescontrol.R;
 
 
 public class BaseActivity extends AppCompatActivity {

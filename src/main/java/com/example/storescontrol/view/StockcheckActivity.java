@@ -1,9 +1,7 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,19 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.Url.Untils;
-import com.example.storescontrol.bean.ArrivalHeadBean;
 import com.example.storescontrol.bean.StockcheckBean;
-import com.example.storescontrol.bean.TROutBywhcodeBean;
 import com.example.storescontrol.databinding.ActivityStockcheckBinding;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,7 +35,6 @@ public class StockcheckActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stockcheck);
         binding=DataBindingUtil.setContentView(this,R.layout.activity_stockcheck);
         Untils.initTitle(getIntent().getStringExtra("menuname"),this);
         binding.bSearch.setOnClickListener(new View.OnClickListener() {

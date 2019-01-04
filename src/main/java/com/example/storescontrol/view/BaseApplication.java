@@ -1,4 +1,4 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view;
 
 import android.app.Application;
 import android.content.Context;

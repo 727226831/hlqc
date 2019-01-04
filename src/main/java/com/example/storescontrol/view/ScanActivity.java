@@ -1,20 +1,15 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.zxing.integration.android.IntentResult;
+import com.example.storescontrol.R;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
-
-import org.w3c.dom.Text;
 
 public class ScanActivity extends BaseActivity {
 

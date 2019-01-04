@@ -16,6 +16,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <include layout="@layout/layout_title"/>
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:gravity="center_vertical"
+                    style="@style/textview"
+                    android:textColor="@color/blue"
+                    android:id="@+id/tv_title1"
+                    android:text="材料编码："
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_cwhcode"
+                    android:layout_margin="10dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_scan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:layout_centerVertical="true"
+                    style="@style/edittext"
+                    android:id="@+id/et_cwhcode"
+                    android:layout_toRightOf="@id/tv_title1"
+                    android:layout_toLeftOf="@id/iv_cwhcode"
+                    />
+            </RelativeLayout>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -27,10 +54,10 @@
                     android:layout_height="wrap_content">
                     <TextView
                         style="@style/textview"
-                        android:id="@+id/tv_title1"
-                        android:text="仓库："
+
+                        android:text="名称："
                         />
-                    <EditText
+                    <TextView
                         android:layout_gravity="center_vertical"
                         style="@style/edittext"
                         android:id="@+id/et_warehouse"
@@ -45,17 +72,17 @@
                     <TextView
                         android:gravity="center_vertical"
                         style="@style/textview"
-                        android:id="@+id/tv_title0"
-                        android:text="货位："
+                        android:text="投入数量："
                         />
                     <EditText
-                        android:id="@+id/et_position"
-                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:id="@+id/et_inventory"
                         style="@style/edittext"
-                        android:layout_marginRight="@dimen/layout_margin"
+                        android:layout_gravity="center_vertical"
                         android:layout_toRightOf="@id/tv_title1"
                         />
                 </LinearLayout>
+
 
             </LinearLayout>
             <LinearLayout
@@ -71,12 +98,14 @@
                     <TextView
                         android:gravity="center_vertical"
                         style="@style/textview"
-                        android:text="品名："
+                        android:id="@+id/tv_title0"
+                        android:text="批号："
                         />
-                    <EditText
-                        android:id="@+id/et_inventory"
-                        style="@style/edittext"
+                    <TextView
+                        android:id="@+id/et_position"
                         android:layout_gravity="center_vertical"
+                        style="@style/edittext"
+                        android:layout_marginRight="@dimen/layout_margin"
                         android:layout_toRightOf="@id/tv_title1"
                         />
                 </LinearLayout>
@@ -89,9 +118,9 @@
                         android:gravity="center_vertical"
                         style="@style/textview"
 
-                        android:text="批号："
+                        android:text="卷号："
                         />
-                    <EditText
+                    <TextView
                         android:id="@+id/et_batch"
                         android:layout_gravity="center_vertical"
                         style="@style/edittext"
@@ -109,12 +138,22 @@
             android:layout_alignParentRight="true"
             android:background="@color/blue"
             android:textColor="@android:color/white"
-            android:text="查询"
+            android:text="完工送检"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+        <Button
+            android:layout_below="@id/l_input"
+           android:layout_toLeftOf="@id/b_search"
+            android:layout_margin="10dp"
+
+            android:background="@color/blue"
+            android:textColor="@android:color/white"
+            android:text="确定"
             android:layout_width="wrap_content"
             android:layout_height="40dp" />
         <LinearLayout
             android:layout_below="@id/b_search"
-           style="@style/line"></LinearLayout>
+            style="@style/line"></LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_list"
             android:layout_below="@id/b_search"

@@ -1,18 +1,9 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,26 +16,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.Url.Untils;
 import com.example.storescontrol.bean.ArrivalHeadBean;
 import com.example.storescontrol.bean.DetailsBean;
-import com.example.storescontrol.bean.TROutBywhcodeBean;
+import com.example.storescontrol.view.warehousing.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-import com.qr285.sdk.OnPrinterListener;
-import com.qr285.sdk.PrinterPort;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

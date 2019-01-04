@@ -1,12 +1,7 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view.sale;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.Url.Untils;
-import com.example.storescontrol.bean.ArrivalHeadBean;
 import com.example.storescontrol.bean.DispatchBean;
-import com.example.storescontrol.bean.TROutBywhcodeBean;
+import com.example.storescontrol.view.BaseActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.storescontrol.bean.DispatchBean;
+import com.example.storescontrol.R;
 import com.example.storescontrol.bean.LoginBean;
 import com.example.storescontrol.databinding.ActivityIndexBinding;
+import com.example.storescontrol.view.declaration.DeclarationselectActivity;
+import com.example.storescontrol.view.sale.DispatchActivity;
+import com.example.storescontrol.view.warehousing.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 
 public class IndexActivity extends BaseActivity {
@@ -89,6 +92,9 @@ public class IndexActivity extends BaseActivity {
                             break;
                         case 8:
                             intent  =new Intent(IndexActivity.this,StockcheckActivity.class);
+                            break;
+                        case 6:
+                            intent  =new Intent(IndexActivity.this,DeclarationselectActivity.class);
                             break;
 
                         default:

@@ -1,4 +1,4 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view.warehousing;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -7,23 +7,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.DatabaseUtils;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Untils;
 import com.example.storescontrol.bean.ArrivalHeadBean;
 import com.example.storescontrol.databinding.ActivityPrintBinding;
+import com.example.storescontrol.view.BaseActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -69,12 +66,13 @@ public class PrintActivity extends BaseActivity {
         binding.bPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                initbluetooth();
                printeData();
             }
         });
 
 
-        initbluetooth();
+       // initbluetooth();
 
 
 
@@ -157,6 +155,7 @@ public class PrintActivity extends BaseActivity {
                 if(device.getName().contains("QR")){
                     mBluetoothAdapter.cancelDiscovery();
                     printerPort.connect(device.getAddress());
+
                 }
             }
 
@@ -185,7 +184,7 @@ public class PrintActivity extends BaseActivity {
         if (mBluetoothAdapter!= null) {
             mBluetoothAdapter.cancelDiscovery();
         }
-
+        printerPort.disconnect();
         // Unregister broadcast listeners
         this.unregisterReceiver(mReceiver);
     }

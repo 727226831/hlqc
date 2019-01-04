@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PutListActivity">
+    tools:context=".view.warehousing.PutListActivity">
 <include
     android:id="@+id/l_title"
     layout="@layout/layout_title"/>

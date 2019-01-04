@@ -1,19 +1,10 @@
-package com.example.storescontrol;
+package com.example.storescontrol.view;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,19 +12,16 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.storescontrol.BuildConfig;
+import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.bean.LoginBean;
 import com.example.storescontrol.Url.iUrl;
 import com.example.storescontrol.databinding.ActivityLoginBinding;
 import com.google.gson.Gson;
-import com.qr285.sdk.OnPrinterListener;
-import com.qr285.sdk.PrinterPort;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Set;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;

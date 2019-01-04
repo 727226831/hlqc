@@ -72,7 +72,7 @@ public class PrintActivity extends BaseActivity {
         });
 
 
-       // initbluetooth();
+
 
 
 

@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\item_dispatchdetails.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\item_dispatchdetails.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\item_detail_list.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\item_detail_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_dispatchdetails.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\activity_dispatchdetails.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_print.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\activity_print.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\item_production_list.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\item_production_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_stockcheck.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\activity_stockcheck.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_putdetail.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\activity_putdetail.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_productionwarehousing.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\activity_productionwarehousing.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_login.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_index.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\activity_index.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\item_input.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\item_input.xml"
+    },
+    {
+        "merged": "C:\\Users\\teemo\\MyApplication\\storescontrol\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\item_stockcheck.xml",
+        "source": "C:\\Users\\teemo\\MyApplication\\storescontrol\\src\\main\\res\\layout\\item_stockcheck.xml"
+    }
+]

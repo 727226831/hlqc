@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+<<<<<<< HEAD
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../storescontrol_jhrl" vcs="Git" />
+=======
+    <mapping directory="" vcs="Git" />
+>>>>>>> e72fc79dcf304009cb3781010974b429c8124bf3
+  </component>
+</project>

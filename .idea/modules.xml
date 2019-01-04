@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+<<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/../MyApplication2.iml" filepath="$PROJECT_DIR$/../MyApplication2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/storescontrol.iml" filepath="$PROJECT_DIR$/storescontrol.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/storescontrol_jhrl.iml" filepath="$PROJECT_DIR$/storescontrol_jhrl.iml" />
+>>>>>>> e72fc79dcf304009cb3781010974b429c8124bf3
+    </modules>
+  </component>
+</project>

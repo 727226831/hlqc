@@ -19,7 +19,6 @@ import com.example.storescontrol.bean.LoginBean;
 import com.example.storescontrol.databinding.ActivityIndexBinding;
 import com.example.storescontrol.view.declaration.DeclarationselectActivity;
 import com.example.storescontrol.view.sale.DispatchActivity;
-import com.example.storescontrol.view.warehousing.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 
 public class IndexActivity extends BaseActivity {

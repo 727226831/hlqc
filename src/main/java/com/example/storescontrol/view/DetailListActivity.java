@@ -21,6 +21,7 @@ import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.Url.Untils;
 import com.example.storescontrol.bean.ArrivalHeadBean;
 import com.example.storescontrol.bean.DetailsBean;
+import com.example.storescontrol.view.warehousing.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -127,9 +128,6 @@ public class DetailListActivity extends BaseActivity {
                 try {
                     if(response.code()==200) {
                         Toast.makeText(DetailListActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
-                        SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
-                        sharedPreferences.edit().putString("checklist","").commit();
-                        sharedPreferences.edit().putString("checkscan","").commit();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

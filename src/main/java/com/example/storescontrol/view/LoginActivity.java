@@ -113,7 +113,6 @@ public class LoginActivity extends BaseActivity {
                                         editor.putString("password",activityLoginBinding.etPassword.getText().toString()).commit();
                                         editor.putBoolean("isChecked",activityLoginBinding.cbRemember.isChecked());
                                         editor.putString("userinfo",new Gson().toJson(resultBean));
-
                                         editor.commit();
                                         if(!resultBean.getVersionNumber().equals(BuildConfig.VERSION_NAME)){
                                             downloadByWeb(LoginActivity.this,Request.URL+"/upgrade/MMS_"+resultBean.getVersionNumber()+".apk");
@@ -145,7 +144,7 @@ public class LoginActivity extends BaseActivity {
                     } });
             }
         });
-
+       // downloadByWeb(this,"http://192.168.1.85:8881/upgrade/MMS_1.0.0.apk");
 
     }
     private static void downloadByWeb(Context context, String apkPath) {

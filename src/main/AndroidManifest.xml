@@ -83,9 +83,9 @@
         <activity android:name=".view.PortActivity" />
         <activity android:name=".view.IndexActivity" />
         <activity android:name=".view.ScanActivity" />
-        <activity android:name=".view.warehousing.PutListActivity" />
+        <activity android:name=".view.PutListActivity" />
         <activity
-            android:name=".view.warehousing.ProductionwarehousingActivity"
+            android:name=".view.ProductionwarehousingActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity android:name=".view.ProductionListActivity" />
         <activity android:name=".view.DetailListActivity" />
@@ -103,7 +103,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".view.warehousing.PrintActivity" >
+        <activity android:name=".view.PrintActivity" >
 
 
         </activity>

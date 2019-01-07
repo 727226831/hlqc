@@ -21,7 +21,7 @@ import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.Url.Untils;
 import com.example.storescontrol.bean.ArrivalHeadBean;
 import com.example.storescontrol.bean.DetailsBean;
-import com.example.storescontrol.view.warehousing.ProductionwarehousingActivity;
+import com.example.storescontrol.view.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

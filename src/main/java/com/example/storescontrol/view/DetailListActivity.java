@@ -128,6 +128,9 @@ public class DetailListActivity extends BaseActivity {
                 try {
                     if(response.code()==200) {
                         Toast.makeText(DetailListActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
+                        SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
+                        sharedPreferences.edit().putString("checklist","").commit();
+                        sharedPreferences.edit().putString("checkscan","").commit();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

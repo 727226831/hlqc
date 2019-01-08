@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".view.warehousing.PutListActivity">
+    tools:context=".view.PutListActivity">
     <include
         android:id="@+id/l_title"
         layout="@layout/layout_title"/>

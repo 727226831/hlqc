@@ -17,9 +17,8 @@ import android.widget.TextView;
 import com.example.storescontrol.R;
 import com.example.storescontrol.bean.LoginBean;
 import com.example.storescontrol.databinding.ActivityIndexBinding;
-import com.example.storescontrol.view.declaration.DeclarationselectActivity;
+import com.example.storescontrol.view.declaration.ReportActivity;
 import com.example.storescontrol.view.sale.DispatchActivity;
-import com.example.storescontrol.view.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 
 public class IndexActivity extends BaseActivity {
@@ -94,7 +93,7 @@ public class IndexActivity extends BaseActivity {
                             intent  =new Intent(IndexActivity.this,StockcheckActivity.class);
                             break;
                         case 6:
-                            intent  =new Intent(IndexActivity.this,DeclarationselectActivity.class);
+                            intent  =new Intent(IndexActivity.this,ReportActivity.class);
                             break;
 
                         default:

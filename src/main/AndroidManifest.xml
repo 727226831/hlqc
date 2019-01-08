@@ -103,15 +103,11 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".view.PrintActivity" >
-
-
-        </activity>
-
-        <activity android:name=".view.declaration.DeclarationselectActivity" />
-        <activity android:name=".view.declaration.DeclarationActivity" />
+        <activity android:name=".view.PrintActivity"></activity>
+        <activity android:name=".view.declaration.ReportActivity" />
         <activity android:name=".view.declaration.MaterialActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
+            ></activity>
     </application>
 
 </manifest>

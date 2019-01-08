@@ -647,25 +647,21 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 arrivalHeadBeans.add(gson.fromJson(jsonElement, ArrivalHeadBean.class));
             }
         }
-
-        String stringscandata;
-        if(isCheck){
-            stringscandata=sharedPreferences.getString("checkscan","");
-        }else {
-            stringscandata=sharedPreferences.getString("putscan","");
-        }
-
-
-
         //判断是否此单已添加
         boolean isSelected = false;
 
         if (arrivalHeadBean.getCwhcode()==null) {
             Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
-            isSelected = true;
+            return;
         }
         if(stringScan==null){
             return;
+        }
+        String stringscandata;
+        if(isCheck){
+            stringscandata=sharedPreferences.getString("checkscan","");
+        }else {
+            stringscandata=sharedPreferences.getString("putscan","");
         }
 
         if(stringscandata.contains(stringScan) ){

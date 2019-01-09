@@ -183,7 +183,7 @@ public class DispatchdetailslistActivity extends BaseActivity {
             vh.textViewcinvcode.setText("料号："+mDatas.get(i).getCinvcode());
             vh.textViewcbatch.setText("批号："+mDatas.get(i).getCbatch());
             vh.textViewiquantity.setText("数量："+mDatas.get(i).getIquantity());
-            vh.textViewcinvstd.setText("规格型号："+mDatas.get(i).getIquantity());
+            vh.textViewcinvstd.setText("规格型号："+mDatas.get(i).getCinvstd());
             vh.checkBoxselect.setTag(""+i);
 
             vh.checkBoxselect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -213,7 +213,7 @@ public class DispatchdetailslistActivity extends BaseActivity {
                     textViewiquantity,textViewcinvstd,textViewnumber;
             RelativeLayout relativeLayout;
             CheckBox checkBoxselect;
-            public VH(@NonNull View itemView) {
+            VH(@NonNull View itemView) {
                 super(itemView);
                 checkBoxselect=itemView.findViewById(R.id.cb_select);
                 relativeLayout=itemView.findViewById(R.id.l_input);

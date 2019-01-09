@@ -75,6 +75,7 @@
                     style="@style/textview"
                     />
                 <EditText
+                    android:id="@+id/et_people"
                     android:layout_marginRight="@dimen/layout_margin"
                     android:layout_gravity="center_vertical"
                     style="@style/edittext"/>

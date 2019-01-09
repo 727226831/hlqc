@@ -202,7 +202,8 @@ public class PrintActivity extends BaseActivity {
             public void run() {
                 printerPort.setDensity(0x02, 10);
                 printerPort.printBitmap(bmp);
-                printerPort.adjustPosition(0, 240);
+              //  printerPort.adjustPosition(0, 240);
+                printerPort.printerLocation(0x20,10);
                 if (printerPort.getSendResult(10000).equals("OK")) {
                     PrintActivity.this.runOnUiThread(new Runnable() {
                         @Override

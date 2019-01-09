@@ -108,12 +108,11 @@ public class StockcheckActivity extends BaseActivity {
         public void onBindViewHolder(@NonNull  FunctionAdapter.VH vh,final int i) {
             vh.textViewiQuantity.setText("数量："+mDatas.get(i).getIQuantity());
             vh.textViewcBatch.setText("批号："+mDatas.get(i).getCBatch());
-            vh.textViewcInvStd.setText("规格型号："+mDatas.get(i).getCInvStd());
-            vh.textViewcInvName.setText("品名："+mDatas.get(i).getCInvName());
+            vh.textViewcInvStd.setText("描述："+mDatas.get(i).getCInvName()+"/"+mDatas.get(i).getCInvStd());
             vh.textViewcInvCode.setText("料号："+mDatas.get(i).getCInvCode());
             vh.textViewcPosName.setText("货位："+mDatas.get(i).getCPosName());
-            vh.textViewcWhName.setText("仓库："+mDatas.get(i).getIQuantity());
-            vh.textViewtag.setText(i+"");
+            vh.textViewcWhName.setText("仓库："+mDatas.get(i).getCWhName());
+            vh.textViewtag.setText(i+1+"");
         }
 
         @Override
@@ -121,14 +120,13 @@ public class StockcheckActivity extends BaseActivity {
             return mDatas.size();
         }
         class  VH extends RecyclerView.ViewHolder{
-            TextView  textViewcWhName,textViewcPosName,textViewcInvCode,textViewcInvName,
+            TextView  textViewcWhName,textViewcPosName,textViewcInvCode,
                     textViewcInvStd,textViewcBatch,textViewiQuantity,textViewtag;
             public VH(@NonNull View itemView) {
                 super(itemView);
                 textViewcWhName=itemView.findViewById(R.id.tv_cWhName);
                 textViewcPosName=itemView.findViewById(R.id.tv_cPosName);
                 textViewcInvCode=itemView.findViewById(R.id.tv_cInvCode);
-                textViewcInvName=itemView.findViewById(R.id.tv_cInvName);
                 textViewcInvStd=itemView.findViewById(R.id.tv_cInvStd);
                 textViewcBatch=itemView.findViewById(R.id.tv_cBatch);
                 textViewiQuantity=itemView.findViewById(R.id.tv_iQuantity);

@@ -45,8 +45,15 @@ public class ProductionListActivity extends BaseActivity {
         Untils.initTitle(getIntent().getStringExtra("menuname"),this);
         recyclerView=findViewById(R.id.rv_list);
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         getData();
     }
+
     private void getData() {
 
         JSONObject jsonObject=new JSONObject();

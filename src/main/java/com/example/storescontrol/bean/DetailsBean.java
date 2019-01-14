@@ -105,6 +105,9 @@ public class DetailsBean implements Parcelable {
             return iQuantity;
         }
 
+        public Data() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -118,9 +121,8 @@ public class DetailsBean implements Parcelable {
             dest.writeString(this.cInvStd);
             dest.writeString(this.cBatch);
             dest.writeString(this.iQuantity);
-        }
-
-        public Data() {
+            dest.writeString(this.completed);
+            dest.writeString(this.incomplete);
         }
 
         protected Data(Parcel in) {
@@ -130,9 +132,11 @@ public class DetailsBean implements Parcelable {
             this.cInvStd = in.readString();
             this.cBatch = in.readString();
             this.iQuantity = in.readString();
+            this.completed = in.readString();
+            this.incomplete = in.readString();
         }
 
-        public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
+        public static final Creator<Data> CREATOR = new Creator<Data>() {
             @Override
             public Data createFromParcel(Parcel source) {
                 return new Data(source);

@@ -84,7 +84,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
     boolean isCheck=false;//判断是否是生出/采购出库 之外的
     boolean isPrint=false;//调拨/材料出库 需要打印
-    double iquantity;
+    double iquantity=-1;
     boolean isCInvCode=false;
     boolean isBatch=false;
     boolean isCposition=false;
@@ -125,6 +125,9 @@ public class ProductionwarehousingActivity extends BaseActivity {
             }
         }
         sharedPreferences=getSharedPreferences("sp",MODE_PRIVATE);
+        if(isCheck){
+            binding.etBatch.requestFocus();
+        }
 
 
         binding.ivCwhcode.setOnClickListener(onClickListener);
@@ -165,61 +168,61 @@ public class ProductionwarehousingActivity extends BaseActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        @Override
+        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        //上传图片
-        if (requestCode == imageresultcode) {
-            Uri uri = null;
-            if (data != null && data.getData() != null) {
-                uri = data.getData();
-            }
-            if (uri == null) {
-                if (photoUri != null) {
-                    uri = photoUri;
-
-
-
-                    uploadBatchPicture(file.getAbsolutePath());
+            //上传图片
+            if (requestCode == imageresultcode) {
+                Uri uri = null;
+                if (data != null && data.getData() != null) {
+                    uri = data.getData();
+                }
+                if (uri == null) {
+                    if (photoUri != null) {
+                        uri = photoUri;
 
 
+
+                        uploadBatchPicture(file.getAbsolutePath());
+
+
+                    }
                 }
             }
-        }
-        //扫码
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() != null) {
-                String code=result.getContents();
-                Log.i("scan",code);
+            //扫码
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if(result != null) {
+                if(result.getContents() != null) {
+                    String code=result.getContents();
+                    Log.i("scan",code);
 
-                switch (tag){
-                    case 0://仓位
-                        if(code.contains("$")){
-                            Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
-                        }else {
-                            binding.etCwhcode.setText(code);
-                            getCwhcode();
-                        }
-                        break;
-                    case 1://存货编码
+                    switch (tag){
+                        case 0://仓位
+                            if(code.contains("$")){
+                                Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
+                            }else {
+                                binding.etCwhcode.setText(code);
+                                getCwhcode();
+                            }
+                            break;
+                        case 1://存货编码
 
-                        if(code.contains("$")){
-                            binding.etBatch.setText(code);
-                            getData(code);
-                        }else {
-                            Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
-                        }
-                        break;
+                            if(code.contains("$")){
+                                binding.etBatch.setText(code);
+                                getData(code);
+                            }else {
+                                Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
+                            }
+                            break;
+                    }
+
                 }
-
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+
+
         }
-
-
-    }
 
     /**
      * parse code
@@ -330,12 +333,23 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             binding.setBean(arrivalHeadBean);
                             binding.tvNumber.setText(arrivalHeadBean.getIquantity()+arrivalHeadBean.getCComUnitName());
                             old=arrivalHeadBean.getIquantity();
-                            if(!isCheck){
-                                submit();
-                            }
-                        }else {
 
-                            Toast.makeText(ProductionwarehousingActivity.this,"未找到数据",Toast.LENGTH_SHORT).show();
+                                submit();
+
+                        }else {
+                            if(!isCheck) {
+                                Toast.makeText(ProductionwarehousingActivity.this, "未找到数据", Toast.LENGTH_SHORT).show();
+                            }else {
+                                arrivalHeadBean.setMaterial(list.get(4));   //料号
+                                arrivalHeadBean.setCbatch(list.get(1));  //批号
+                                //   arrivalHeadBean.setIquantity(list.get(7));
+                                arrivalHeadBean.setIquantity(list.get(2));
+                                arrivalHeadBean.setIrowno(list.get(5));
+                                binding.setBean(arrivalHeadBean);
+                                binding.tvNumber.setText(arrivalHeadBean.getIquantity()+arrivalHeadBean.getCComUnitName());
+                                submit();
+
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -403,46 +417,8 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 case R.id.b_submit:
 
                     submit();
-                    if(isCheck){
-                        if(list==null) {
-                            break;
-                        }
+                    checkData();
 
-
-                        for (int i = 0; i < detailsBean.getData().size(); i++) {
-                            if (list.get(0).equals(detailsBean.getData().get(i).getCInvCode()) &&
-                                    list.get(1).equals(detailsBean.getData().get(i).getCBatch()) &&
-                                    detailsBean.getData().get(i).getCposition().equals(cposition)) {
-                                isBatch = true;
-                                isCposition = true;
-                                isCInvCode = true;
-                                iQuantitytotal = Double.parseDouble(detailsBean.getData().get(i).getIQuantity());
-                            }
-
-                        }
-
-                        if (iQuantitytotal != -1) {
-                            iquantity = iquantity++;
-
-                            if (iquantity > iQuantitytotal) {
-                                overplus = iquantity - iQuantitytotal;
-                                Toast.makeText(ProductionwarehousingActivity.this, "数量超过上限", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                        if (isPrint) {
-
-                            if (isCInvCode && isCposition && isBatch) {
-                                Intent intent = new Intent(ProductionwarehousingActivity.this, PrintActivity.class);
-                                intent.putExtra("code", stringScan);
-                                intent.putExtra("overplus", overplus);
-                                intent.putExtra("cvenabbname", arrivalHeadBean.getCvenabbname());
-                                intent.putExtra("ddate", arrivalHeadBean.getDdate());
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(ProductionwarehousingActivity.this, "货位/料号/批号错误！", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }
                     break;
                 case R.id.ib_upload:
                     //autoObtainCameraPermission();
@@ -451,6 +427,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                     break;
             }
         }
+
 
 
 
@@ -484,6 +461,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
 
         private void openScan() {
+
             new IntentIntegrator(ProductionwarehousingActivity.this)
                     .setCaptureActivity(ScanActivity.class)
                     .setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)// 扫码的类型,可选：一维码，二维码，一/二维码
@@ -508,6 +486,79 @@ public class ProductionwarehousingActivity extends BaseActivity {
         }
     }
 
+    private void checkData() {
+        if(isCheck){
+            if(list==null) {
+                return;
+            }
+
+
+            for (int i = 0; i < detailsBean.getData().size(); i++) {
+                if (list.get(0).equals(detailsBean.getData().get(i).getCInvCode()) &&
+                        list.get(1).equals(detailsBean.getData().get(i).getCBatch())
+                        ) {
+                    isBatch = true;
+                    //  isCposition = true;
+                    isCInvCode = true;
+                    Log.i("detailsBean",new Gson().toJson(detailsBean)+"/"+i);
+                    iQuantitytotal = Double.parseDouble(detailsBean.getData().get(i).getIncomplete());
+
+//                    if(detailsBean.getData().get(i).getCompleted().equals("0")){
+//                        iquantity=Double.parseDouble(arrivalHeadBean.getIquantity());
+//
+//                    }else {
+//                        iquantity=Double.parseDouble(detailsBean.getData().get(i).getCompleted())
+//                                +Double.parseDouble(arrivalHeadBean.getIquantity());
+//
+//                    }
+//                    Log.i("iquantity",iquantity+"");
+//                    detailsBean.getData().get(i).setCompleted(iquantity+"");
+
+
+                    if (iQuantitytotal != -1) {
+                          Log.i("is run",detailsBean.getData().get(i).getCompleted().equals("0")+"");
+
+
+                        if(iquantity==-1){
+                            iquantity=Double.parseDouble(arrivalHeadBean.getIquantity());
+                        }else {
+                            iquantity=iquantity+Double.parseDouble(arrivalHeadBean.getIquantity());
+                        }
+
+                        if (iquantity > iQuantitytotal) {
+                            overplus = iquantity - iQuantitytotal;
+                            Toast.makeText(ProductionwarehousingActivity.this, "数量超过上限", Toast.LENGTH_LONG).show();
+                            iquantity=-1;
+                            if(!isPrint) {
+                                return;
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+
+            if (isPrint) {
+
+                if (!isCInvCode && isBatch ) {
+                    Toast.makeText(ProductionwarehousingActivity.this, "料号/批号错误！", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if(overplus!=-1){
+                    Intent intent = new Intent(ProductionwarehousingActivity.this, PrintActivity.class);
+                    intent.putExtra("code", stringScan);
+                    intent.putExtra("overplus", overplus);
+                    intent.putExtra("cvenabbname", arrivalHeadBean.getCvenabbname());
+                    intent.putExtra("ddate", arrivalHeadBean.getDdate());
+                    startActivity(intent);
+                }
+
+            }
+        }
+    }
+
 
 
     @Override
@@ -516,6 +567,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         arrivalHeadBean=null;
         binding.setBean(arrivalHeadBean);
         binding.tvNumber.setText("");
+       // iquantity=-1;
 
         getCount();
     }
@@ -649,10 +701,11 @@ public class ProductionwarehousingActivity extends BaseActivity {
         }
         //判断是否此单已添加
         boolean isSelected = false;
-
-        if (arrivalHeadBean.getCwhcode()==null) {
-            Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
-            return;
+        if(!isCheck) {
+            if (arrivalHeadBean.getCwhcode() == null) {
+                Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
+                return;
+            }
         }
         if(stringScan==null){
             return;
@@ -668,6 +721,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
             Toast.makeText(ProductionwarehousingActivity.this, "此二维码数据已添加", Toast.LENGTH_LONG).show();
             binding.etBatch.setText("");
             isSelected = true;
+            return;
         }
 
         if (isSelected != true) {
@@ -704,6 +758,9 @@ public class ProductionwarehousingActivity extends BaseActivity {
             }
             getCount();
             initBatch();
+            checkData();
+
+
         }
     }
 

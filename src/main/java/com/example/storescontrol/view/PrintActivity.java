@@ -57,7 +57,8 @@ public class PrintActivity extends BaseActivity {
         if(!code.isEmpty()){
             String  numbers=code.replace("$",",");
              list= Arrays.asList(numbers.split(","));
-            initView(list.get(2));
+
+            initView( Double.parseDouble(list.get(2))-overplus+"");
         }
 
 
@@ -65,11 +66,22 @@ public class PrintActivity extends BaseActivity {
         binding.bPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initbluetooth();
+                if(printerPort==null) {
+                    initbluetooth();
+                }
                printeData();
             }
         });
-
+        binding.bNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initView(overplus+"");
+                if(printerPort==null) {
+                    initbluetooth();
+                }
+                printeData();
+            }
+        });
 
 
 
@@ -90,14 +102,17 @@ public class PrintActivity extends BaseActivity {
         codenew=codenew.replace(" ","");
         createCode(codenew);
     }
-
+    // boolean isRegister=false;
     private void initbluetooth() {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        isRegister=true;
         this.registerReceiver(mReceiver, filter);
 
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        isRegister=true;
         this.registerReceiver(mReceiver, filter);
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         //If the Bluetooth adapter is not supported,programmer is over
         if (mBluetoothAdapter == null) {
@@ -151,7 +166,7 @@ public class PrintActivity extends BaseActivity {
         if(pairedDevices.size()>0){
             for (BluetoothDevice device : pairedDevices) {
                 Log.i("device-bind",device.getName());
-                if(device.getName().contains("QR")){
+                if(device.getName().contains("QR-285A")){
                     mBluetoothAdapter.cancelDiscovery();
                     printerPort.connect(device.getAddress());
 
@@ -175,7 +190,7 @@ public class PrintActivity extends BaseActivity {
         }
     }
 
-
+   boolean isRegister=false;
 
     @Override
     protected void onDestroy() {
@@ -183,9 +198,15 @@ public class PrintActivity extends BaseActivity {
         if (mBluetoothAdapter!= null) {
             mBluetoothAdapter.cancelDiscovery();
         }
-        printerPort.disconnect();
+        if(printerPort!=null) {
+            printerPort.disconnect();
+        }
         // Unregister broadcast listeners
-        this.unregisterReceiver(mReceiver);
+           if(isRegister) {
+            isRegister=false;
+               this.unregisterReceiver(mReceiver);
+           }
+
     }
     public void printeData() {
         viewtag.setDrawingCacheEnabled(true);
@@ -208,26 +229,8 @@ public class PrintActivity extends BaseActivity {
                     PrintActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(overplus!=-1){
-                                initView(overplus+"");
-                                AlertDialog.Builder builder=new AlertDialog.Builder(PrintActivity.this);
-                                builder.setMessage("数量超限，请打印第二标签！").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                    }
-                                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                      dialog.dismiss();
-                                      printeData();
-                                      overplus=-1;
-                                    }
-                                }).create().show();
-                            }else {
-                                Toast.makeText(PrintActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
-                            }
 
+                            Toast.makeText(PrintActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {

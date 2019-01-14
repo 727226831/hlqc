@@ -208,7 +208,7 @@ public class DispatchdetailslistActivity extends BaseActivity {
             return mDatas.size();
         }
         class  VH extends RecyclerView.ViewHolder{
-
+            
             TextView textViewcinvname,textViewirowno,textViewbWhPos,textViewcinvcode,textViewcbatch,
                     textViewiquantity,textViewcinvstd,textViewnumber;
             RelativeLayout relativeLayout;

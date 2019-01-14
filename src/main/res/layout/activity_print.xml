@@ -122,13 +122,29 @@
             android:layout_width="105dp"
             android:layout_height="105dp" />
     </RelativeLayout>
-    <Button
-        android:id="@+id/b_print"
+    <LinearLayout
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/white"
-        android:background="@color/blue"
-        android:text="打印"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/b_print"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:text="打印"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_marginLeft="@dimen/layout_margin"
+            android:id="@+id/b_next"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:text="下一张"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </LinearLayout>
 </layout>

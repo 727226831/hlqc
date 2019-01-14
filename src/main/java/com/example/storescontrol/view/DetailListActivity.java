@@ -73,22 +73,30 @@ public class DetailListActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+        SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString("checklist","").commit();
+        sharedPreferences.edit().putString("checkscan","").commit();
 
     }
-
+    SharedPreferences sharedPreferences;
     @Override
     protected void onStart() {
         super.onStart();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
+         sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
         String stringarrivalHeadBeans = sharedPreferences.getString("checklist", "");
         if (!stringarrivalHeadBeans.equals("")) {
             Gson gson = new Gson();
             JsonArray arry = new JsonParser().parse(stringarrivalHeadBeans).getAsJsonArray();
+            arrivalHeadBeans=new ArrayList<>();
             for (JsonElement jsonElement : arry) {
                 arrivalHeadBeans.add(gson.fromJson(jsonElement, ArrivalHeadBean.class));
             }
             Log.i("arrivalHeadBeans",gson.toJson(arrivalHeadBeans));
+            functionAdapter=new FunctionAdapter(detailsBean.getData());
+            recyclerView.setLayoutManager(new LinearLayoutManager(DetailListActivity.this));
+            recyclerView.addItemDecoration(new DividerItemDecoration(DetailListActivity.this,DividerItemDecoration.VERTICAL));
+            recyclerView.setAdapter(functionAdapter);
         }
     }
 
@@ -131,6 +139,7 @@ public class DetailListActivity extends BaseActivity {
                         SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
                         sharedPreferences.edit().putString("checklist","").commit();
                         sharedPreferences.edit().putString("checkscan","").commit();
+                        finish();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -215,27 +224,45 @@ public class DetailListActivity extends BaseActivity {
                 mDatas.get(i).setIncomplete(mDatas.get(i).getIQuantity());
             }else {
                 for (int j = 0; j <arrivalHeadBeans.size() ; j++) {
-                    if(arrivalHeadBeans.get(j).getcInvCode().equals(mDatas.get(i).getCInvCode())&&
-                            arrivalHeadBeans.get(j).getCposition().equals(mDatas.get(i).getCposition())
+                    if(arrivalHeadBeans.get(j).getcInvCode().equals(mDatas.get(i).getCInvCode())
                             && arrivalHeadBeans.get(j).getCbatch().equals(mDatas.get(i).getCBatch())){
-                        mDatas.get(i).setCompleted(arrivalHeadBeans.get(j).getIquantity());
 
-                        double dcompleted=Double.parseDouble(arrivalHeadBeans.get(j).getIquantity());
-                        dcompleted++;
+                        if(mDatas.get(i).getCompleted()!=null){
+                            double dold=Double.parseDouble(mDatas.get(i).getCompleted());
+                            double dnew=Double.parseDouble(arrivalHeadBeans.get(j).getIquantity());
+                            mDatas.get(i).setCompleted(dold+dnew+"");
+
+                        }else {
+                            mDatas.get(i).setCompleted(arrivalHeadBeans.get(j).getIquantity());
+
+                        }
+                        //已扫码数量
+                        double dcompleted=Double.parseDouble(mDatas.get(i).getCompleted());
+
+
+
+
                         double dtotal=Double.parseDouble(mDatas.get(i).getIQuantity());
 
-                        if(dtotal-dcompleted<0){
+                        if(dtotal-dcompleted>0){
                             mDatas.get(i).setIncomplete((dtotal-dcompleted)+"");
+
                         }else {
+                            mDatas.get(i).setCompleted(mDatas.get(i).getIQuantity());
+
                             mDatas.get(i).setIncomplete("0");
+
                         }
                     }
                 }
 
             }
-
+            detailsBean.setData(mDatas);
             vh.textViewcompleted.setText("已扫码："+mDatas.get(i).getCompleted());
             vh.textViewincomplete.setText("未扫码："+ mDatas.get(i).getIncomplete());
+
+
+
 
         }
 

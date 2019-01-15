@@ -62,11 +62,9 @@ import retrofit2.Response;
  */
 public class ProductionwarehousingActivity extends BaseActivity {
     ActivityProductionwarehousingBinding binding;
-
     ArrivalHeadBean arrivalHeadBean;
     DetailsBean detailsBean=new DetailsBean();
     private  String ccode; //单号
-
     String string1,string2;
     List<String> list;
     int tag=-1;//0仓库 1料号
@@ -82,12 +80,11 @@ public class ProductionwarehousingActivity extends BaseActivity {
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
     SharedPreferences sharedPreferences;
 
-    boolean isCheck=false;//判断是否是生出/采购出库 之外的
+    boolean isCheck=false;//判断是否是生产/采购出库 之外的
     boolean isPrint=false;//调拨/材料出库 需要打印
     double iquantity=-1;
     boolean isCInvCode=false;
     boolean isBatch=false;
-    boolean isCposition=false;
     double iQuantitytotal=-1;
     double overplus=-1;
 
@@ -130,12 +127,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         }
 
 
-        binding.ivCwhcode.setOnClickListener(onClickListener);
-        binding.ivBatch.setOnClickListener(onClickListener);
-        binding.bSubmit.setOnClickListener(onClickListener);
-        binding.bSearch.setOnClickListener(onClickListener);
-        binding.ivAdd.setOnClickListener(onClickListener);
-        binding.ivMinus.setOnClickListener(onClickListener);
+
         binding.etTimes.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -165,6 +157,12 @@ public class ProductionwarehousingActivity extends BaseActivity {
         binding.etCwhcode.setOnKeyListener(onKeyListener);
         binding.etBatch.setOnKeyListener(onKeyListener);
         binding.ibUpload.setOnClickListener(onClickListener);
+        binding.ivCwhcode.setOnClickListener(onClickListener);
+        binding.ivBatch.setOnClickListener(onClickListener);
+        binding.bSubmit.setOnClickListener(onClickListener);
+        binding.bSearch.setOnClickListener(onClickListener);
+        binding.ivAdd.setOnClickListener(onClickListener);
+        binding.ivMinus.setOnClickListener(onClickListener);
     }
 
 
@@ -180,12 +178,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 if (uri == null) {
                     if (photoUri != null) {
                         uri = photoUri;
-
-
-
                         uploadBatchPicture(file.getAbsolutePath());
-
-
                     }
                 }
             }
@@ -209,7 +202,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
                             if(code.contains("$")){
                                 binding.etBatch.setText(code);
-                                getData(code);
+                                parseCode(code);
                             }else {
                                 Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
                             }
@@ -228,7 +221,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
      * parse code
      * @param code
      */
-    private void getData(String code){
+    private void parseCode(String code){
         stringScan=code;
         if(code.isEmpty()){
             return;
@@ -320,10 +313,8 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             arrivalHeadBean=gson.fromJson(string,ArrivalHeadBean.class);
                             arrivalHeadBean.setMaterial(list.get(4));   //料号
                             arrivalHeadBean.setCbatch(list.get(1));  //批号
-                            //   arrivalHeadBean.setIquantity(list.get(7));
                             arrivalHeadBean.setIquantity(list.get(2));
                             arrivalHeadBean.setIrowno(list.get(5));
-                            // arrivalHeadBean.setStamp(list.get(9));
                             arrivalHeadBean.setImageid(imageid);
 
                             arrivalHeadBean.setCwhcode(cwhcode);
@@ -342,7 +333,6 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             }else {
                                 arrivalHeadBean.setMaterial(list.get(4));   //料号
                                 arrivalHeadBean.setCbatch(list.get(1));  //批号
-                                //   arrivalHeadBean.setIquantity(list.get(7));
                                 arrivalHeadBean.setIquantity(list.get(2));
                                 arrivalHeadBean.setIrowno(list.get(5));
                                 binding.setBean(arrivalHeadBean);
@@ -369,13 +359,14 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 switch (v.getId()) {
                     case R.id.et_cwhcode:
                         if(binding.etCwhcode.getText().toString().contains("仓库")){
-                            Toast.makeText(ProductionwarehousingActivity.this,"如需重新查询，请清空该项所有字符",Toast.LENGTH_LONG).show();
+                            Toast.makeText(ProductionwarehousingActivity.this,"如需" +
+                                    "重新查询，请清空该项所有字符",Toast.LENGTH_LONG).show();
                             break;
                         }
                         getCwhcode();
                         break;
                     case R.id.et_batch:
-                        getData(binding.etBatch.getText().toString());
+                        parseCode(binding.etBatch.getText().toString());
                         break;
                 }
             }
@@ -388,7 +379,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
     View.OnClickListener onClickListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int times;
+            int times;//数量倍数
             switch (v.getId()){
 
                 case R.id.iv_cwhcode:
@@ -421,7 +412,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
                     break;
                 case R.id.ib_upload:
-                    //autoObtainCameraPermission();
+
                     takePhone();
 
                     break;
@@ -496,29 +487,17 @@ public class ProductionwarehousingActivity extends BaseActivity {
             for (int i = 0; i < detailsBean.getData().size(); i++) {
                 if (list.get(0).equals(detailsBean.getData().get(i).getCInvCode()) &&
                         list.get(1).equals(detailsBean.getData().get(i).getCBatch())
-                        ) {
+                        )
+                {
                     isBatch = true;
-                    //  isCposition = true;
                     isCInvCode = true;
-                    Log.i("detailsBean",new Gson().toJson(detailsBean)+"/"+i);
+
                     iQuantitytotal = Double.parseDouble(detailsBean.getData().get(i).getIncomplete());
 
-//                    if(detailsBean.getData().get(i).getCompleted().equals("0")){
-//                        iquantity=Double.parseDouble(arrivalHeadBean.getIquantity());
-//
-//                    }else {
-//                        iquantity=Double.parseDouble(detailsBean.getData().get(i).getCompleted())
-//                                +Double.parseDouble(arrivalHeadBean.getIquantity());
-//
-//                    }
-//                    Log.i("iquantity",iquantity+"");
-//                    detailsBean.getData().get(i).setCompleted(iquantity+"");
+
 
 
                     if (iQuantitytotal != -1) {
-                          Log.i("is run",detailsBean.getData().get(i).getCompleted().equals("0")+"");
-
-
                         if(iquantity==-1){
                             iquantity=Double.parseDouble(arrivalHeadBean.getIquantity());
                         }else {
@@ -567,8 +546,6 @@ public class ProductionwarehousingActivity extends BaseActivity {
         arrivalHeadBean=null;
         binding.setBean(arrivalHeadBean);
         binding.tvNumber.setText("");
-       // iquantity=-1;
-
         getCount();
     }
     //获取已加入清单量
@@ -585,11 +562,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         binding.tvTotal.setText("总计："+arrivalHeadBeans.size()+"条");
     }
 
-    private String getPhotoFileName() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        return "IMG_" + dateFormat.format(date);
-    }
+
 
     private void autoObtainCameraPermission() {
 
@@ -604,7 +577,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
             if (hasSdcard()) {
                 String path = Environment.getExternalStorageDirectory() +
                         File.separator + Environment.DIRECTORY_DCIM + File.separator;
-                String fileName = getPhotoFileName() + ".jpg";
+                String fileName = Untils.getPhotoFileName() + ".jpg";
                 file = new File(path);
                 if (!file.exists()) {
                     file.mkdir();
@@ -625,8 +598,6 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(intentCamera, imageresultcode);
 
-            } else {
-                //  ToastUtils.showShort(this, "设备没有SD卡！");
             }
         }
     }
@@ -699,8 +670,6 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 arrivalHeadBeans.add(gson.fromJson(jsonElement, ArrivalHeadBean.class));
             }
         }
-        //判断是否此单已添加
-        boolean isSelected = false;
         if(!isCheck) {
             if (arrivalHeadBean.getCwhcode() == null) {
                 Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
@@ -720,11 +689,10 @@ public class ProductionwarehousingActivity extends BaseActivity {
         if(stringscandata.contains(stringScan) ){
             Toast.makeText(ProductionwarehousingActivity.this, "此二维码数据已添加", Toast.LENGTH_LONG).show();
             binding.etBatch.setText("");
-            isSelected = true;
             return;
         }
 
-        if (isSelected != true) {
+
 
             binding.tvTotal.setText("总计："+arrivalHeadBeans.size()+"条");
             //update sharedPreferences->putlist item
@@ -761,7 +729,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
             checkData();
 
 
-        }
+
     }
 
     /**
@@ -786,100 +754,21 @@ public class ProductionwarehousingActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 将图片转换成Base64编码的字符串
-     */
-    public static String imageToBase64(String path){
-        if(TextUtils.isEmpty(path)){
-            return null;
-        }
-        InputStream is = null;
-        byte[] data = null;
-        String result = null;
-        try{
-            is = new FileInputStream(path);
-            //创建一个字符流大小的数组。
-            data = new byte[is.available()];
-            //写入数组
-            is.read(data);
-            //用默认的编码格式进行编码
-            result = Base64.encodeToString(data,Base64.NO_WRAP);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            if(null !=is){
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-        return result;
-    }
-
-
-
-
-
     private void uploadBatchPicture(String path) {
-
         dialog.show();
-//                final JSONObject jsonObject=new JSONObject();
-//        try {
-//            jsonObject.put("methodname","UploadBatchPicture");
-//            jsonObject.put("acccode",acccode);
-//            jsonObject.put("usercode",usercode);
-//            jsonObject.put("ccode","");
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        String obj=jsonObject.toString();
-//
-//
-//
-//        Retrofit retrofit=new Retrofit.Builder().baseUrl(Request.URL).build();
-//        final RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
-//        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-//        iUrl upload=retrofit.create(iUrl.class);
-//        RequestBody bodyjson = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), gson.toJson(obj));
-//        retrofit2.Call<ResponseBody> data = upload.uploadFileWithRequestBody( bodyjson,body);
-//        data.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                dialog.dismiss();
-//                try {
-//                    Log.i("upload onresponse",response.body().string());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                dialog.dismiss();
-//              Log.i("upload onfailure",t.toString());
-//            }
-//        });
-
-        final JSONObject jsonObject=new JSONObject();
+        JSONObject jsonObject=new JSONObject();
         try {
             jsonObject.put("methodname","UploadBatchPicture");
             jsonObject.put("acccode",acccode);
             jsonObject.put("usercode",usercode);
             jsonObject.put("ccode","");
-            jsonObject.put("image",imageToBase64(path));
+            jsonObject.put("image",Untils.imageToBase64(path));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         String obj=jsonObject.toString();
         Log.i("json object",obj);
-
-
         Call<ResponseBody> data =Request.getRequestbody(obj);
         data.enqueue(new Callback<ResponseBody>() {
             @Override

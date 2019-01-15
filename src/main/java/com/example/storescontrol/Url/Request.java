@@ -1,5 +1,6 @@
 package com.example.storescontrol.Url;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
@@ -22,7 +23,6 @@ public class Request {
                 connectTimeout(30, TimeUnit.SECONDS).
                 readTimeout(30, TimeUnit.SECONDS).
                 writeTimeout(30, TimeUnit.SECONDS).build();
-
         Retrofit retrofit=new Retrofit.Builder().client(client).baseUrl(URL).build();
 
         RequestBody body=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),obj);

@@ -87,10 +87,10 @@ public class LoginActivity extends BaseActivity {
                 Log.i("json object",obj);
                 SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
                 if(sharedPreferences.getString("port","").equals("")){
-                         Request.URL=Request.BASEURL;
-                }else {
-                      Request.URL=sharedPreferences.getString("port","");
+
+                         sharedPreferences.edit().putString("port",Request.BASEURL).commit();
                 }
+                Request.URL=sharedPreferences.getString("port","");
                 Log.i("url--->",Request.URL);
                 Retrofit retrofit=new Retrofit.Builder().baseUrl(Request.URL).build();
                 RequestBody body=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),obj);
@@ -144,7 +144,7 @@ public class LoginActivity extends BaseActivity {
                     } });
             }
         });
-       // downloadByWeb(this,"http://192.168.1.85:8881/upgrade/MMS_1.0.0.apk");
+
 
     }
     private static void downloadByWeb(Context context, String apkPath) {

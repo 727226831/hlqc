@@ -82,7 +82,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
     boolean isCheck=false;//判断是否是生产/采购出库 之外的
     boolean isPrint=false;//调拨/材料出库 需要打印
-    double iquantity=-1;
+
     boolean isCInvCode=false;
     boolean isBatch=false;
     double iQuantitytotal=-1;
@@ -97,7 +97,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         binding=DataBindingUtil.setContentView(this,R.layout.activity_productionwarehousing);
 
         Untils.initTitle(getIntent().getStringExtra("menuname"),this);
-
+        sharedPreferences=getSharedPreferences("sp",MODE_PRIVATE);
         if(getIntent().getStringExtra("menuname").equals("生产入库")){
             binding.lCvenabbname.setVisibility(View.GONE);
             binding.lBatch.setVisibility(View.VISIBLE);
@@ -113,15 +113,15 @@ public class ProductionwarehousingActivity extends BaseActivity {
             binding.lBatch.setVisibility(View.GONE);
             binding.bSearch.setVisibility(View.GONE);
             binding.tvTotal.setVisibility(View.GONE);
-            // 调补/材料出库打印
-            detailsBean=getIntent().getParcelableExtra("detailsBean");
+
+            detailsBean=new Gson().fromJson(sharedPreferences.getString("detailsBean",""),DetailsBean.class);
             isCheck=true;
             if(getIntent().getStringExtra("menuname").equals("材料出库")||
                     getIntent().getStringExtra("menuname").equals("调拨出库")){
                 isPrint=true;
             }
         }
-        sharedPreferences=getSharedPreferences("sp",MODE_PRIVATE);
+
         if(isCheck){
             binding.etBatch.requestFocus();
         }
@@ -483,7 +483,6 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 return;
             }
 
-
             for (int i = 0; i < detailsBean.getData().size(); i++) {
                 if (list.get(0).equals(detailsBean.getData().get(i).getCInvCode()) &&
                         list.get(1).equals(detailsBean.getData().get(i).getCBatch())
@@ -494,25 +493,27 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
                     iQuantitytotal = Double.parseDouble(detailsBean.getData().get(i).getIncomplete());
 
+                    double dIncomplete=Double.parseDouble(detailsBean.getData().get(i).getIncomplete());
+                    double dCompleted=Double.parseDouble(detailsBean.getData().get(i).getCompleted());
 
 
 
-                    if (iQuantitytotal != -1) {
-                        if(iquantity==-1){
-                            iquantity=Double.parseDouble(arrivalHeadBean.getIquantity());
-                        }else {
-                            iquantity=iquantity+Double.parseDouble(arrivalHeadBean.getIquantity());
+                    if(dIncomplete<Double.parseDouble(arrivalHeadBean.getIquantity())){
+                        overplus=Double.parseDouble(arrivalHeadBean.getIquantity())-dIncomplete;
+                        detailsBean.getData().get(i).setCompleted(detailsBean.getData().get(i).getIQuantity());
+                        detailsBean.getData().get(i).setIncomplete("0");
+                        Toast.makeText(ProductionwarehousingActivity.this, "数量超过上限", Toast.LENGTH_LONG).show();
+                        if(!isPrint) {
+                            return;
                         }
+                    }else {
+                        dIncomplete=dIncomplete-Double.parseDouble(arrivalHeadBean.getIquantity());
+                        dCompleted=dCompleted+Double.parseDouble(arrivalHeadBean.getIquantity());
+                        detailsBean.getData().get(i).setCompleted(dCompleted+"");
+                        detailsBean.getData().get(i).setIncomplete(dIncomplete+"");
 
-                        if (iquantity > iQuantitytotal) {
-                            overplus = iquantity - iQuantitytotal;
-                            Toast.makeText(ProductionwarehousingActivity.this, "数量超过上限", Toast.LENGTH_LONG).show();
-                            iquantity=-1;
-                            if(!isPrint) {
-                                return;
-                            }
-                        }
                     }
+                    sharedPreferences.edit().putString("detailsBean",new Gson().toJson(detailsBean)).commit();
 
                 }
 

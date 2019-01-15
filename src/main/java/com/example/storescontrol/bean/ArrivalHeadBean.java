@@ -8,10 +8,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Auto-generated: 2018-11-19 11:27:13
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
  */
 public class ArrivalHeadBean implements Parcelable {
 

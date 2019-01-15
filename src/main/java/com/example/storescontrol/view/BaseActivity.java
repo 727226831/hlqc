@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.storescontrol.R;
+import com.example.storescontrol.bean.DetailsBean;
 
 
 public class BaseActivity extends AppCompatActivity {

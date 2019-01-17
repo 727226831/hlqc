@@ -45,7 +45,6 @@ public class DetailListActivity extends BaseActivity {
     TextView textViewTotal;
     DetailsBean detailsBean=new DetailsBean();
     SharedPreferences sharedPreferences;
-    private  ArrayList<ArrivalHeadBean> arrivalHeadBeans = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class DetailListActivity extends BaseActivity {
         buttonSubmit=findViewById(R.id.b_submit);
         textViewTotal=findViewById(R.id.tv_total);
         buttonscan=findViewById(R.id.b_scan);
-        getData();
+
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +77,7 @@ public class DetailListActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
         sharedPreferences.edit().putString("checklist","").commit();
         sharedPreferences.edit().putString("checkscan","").commit();
+        getData();
 
     }
 

@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_margin="@dimen/layout_margin"
-                    android:text="完工不合格"
+                    android:text="完工合格"
                     style="@style/item_normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -186,6 +186,21 @@
                         style="@style/edittext" />
                 </LinearLayout>
 
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="原因："
+                    style="@style/textview"
+                    />
+                <EditText
+                    android:layout_marginRight="@dimen/layout_margin"
+                    android:layout_gravity="center_vertical"
+                    style="@style/edittext" />
             </LinearLayout>
             <LinearLayout style="@style/line" />
 

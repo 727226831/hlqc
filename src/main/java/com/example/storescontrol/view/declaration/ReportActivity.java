@@ -23,6 +23,9 @@ import com.example.storescontrol.Url.Untils;
 import com.example.storescontrol.databinding.ActivityReportBinding;
 import com.example.storescontrol.view.BaseActivity;
 
+/**
+ * 完工报单
+ */
 public class ReportActivity extends BaseActivity {
     ActivityReportBinding binding;
     @Override

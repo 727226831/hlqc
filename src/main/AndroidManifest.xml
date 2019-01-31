@@ -91,7 +91,7 @@
         <activity android:name=".view.DetailListActivity" />
         <activity android:name=".view.StockcheckActivity" />
         <activity android:name=".view.sale.DispatchActivity" />
-        <activity android:name=".view.sale.DispatchdetailslistActivity" />
+        <activity android:name=".view.sale.SaleActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

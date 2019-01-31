@@ -74,9 +74,8 @@ public class DetailListActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
-        sharedPreferences.edit().putString("checklist","").commit();
-        sharedPreferences.edit().putString("checkscan","").commit();
+
+        clearCheckdata();
         getData();
 
     }
@@ -97,7 +96,8 @@ public class DetailListActivity extends BaseActivity {
 
     private void checkData() {
         for (int i = 0; i <detailsBean.getData().size() ; i++) {
-              if(!detailsBean.getData().get(i).getIncomplete().equals("0")){
+             double number=Double.parseDouble(detailsBean.getData().get(i).getIncomplete());
+              if(number!=0){
                   Toast.makeText(DetailListActivity.this,"有未扫码条目，请完成后再提交",Toast.LENGTH_LONG).show();
                   return;
               }
@@ -132,8 +132,7 @@ public class DetailListActivity extends BaseActivity {
                     if(response.code()==200) {
                         Toast.makeText(DetailListActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
 
-                        sharedPreferences.edit().putString("checklist","").commit();
-                        sharedPreferences.edit().putString("checkscan","").commit();
+                       clearCheckdata();
                         finish();
                     }
                 } catch (Exception e) {

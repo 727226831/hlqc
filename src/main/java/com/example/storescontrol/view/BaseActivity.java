@@ -20,7 +20,7 @@ import com.example.storescontrol.bean.DetailsBean;
 public class BaseActivity extends AppCompatActivity {
     public static   String acccode,usercode;
     public  AlertDialog dialog;
-    public  SharedPreferences sharedPreferences;
+
 
 
     @Override
@@ -32,12 +32,14 @@ public class BaseActivity extends AppCompatActivity {
         AlertDialog.Builder builder=new AlertDialog.Builder(this).setView(R.layout.layout_progress);
         dialog=builder.create();
 
-
-
     }
 
-
-
+    public void clearCheckdata() {
+        SharedPreferences   sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString("checklist","").commit();
+        sharedPreferences.edit().putString("checkscan","").commit();
+        sharedPreferences.edit().putString("detailsBean","").commit();
+    }
 
 
 }

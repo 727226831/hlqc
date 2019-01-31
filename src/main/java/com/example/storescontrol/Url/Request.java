@@ -12,7 +12,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 
 public class Request {
-    public  static String BASEURL="  http://123456789.vaiwan.com";
+    public  static String BASEURL="http://123456789.vaiwan.com";
    //public  static String BASEURL="http://192.168.200.20:8881";
    // public  static String BASEURL="http://192.168.1.85:8881";
 

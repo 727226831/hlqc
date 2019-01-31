@@ -72,7 +72,18 @@ public class PutListActivity extends BaseActivity {
         });
 
         SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
-        String data= sharedPreferences.getString("putlist","");
+        String data="";
+        if(getIntent().getStringExtra("menuname").equals("采购入库")) {
+             data= sharedPreferences.getString("CreatePuStoreInlist","");
+
+        }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
+             data= sharedPreferences.getString("CreateCheckdetailslist","");
+            Log.i("data-->",data);
+        }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
+             data= sharedPreferences.getString("CreateProductStoreInlist","");
+
+        }
+
         if (!data.equals("")){
 
             try {
@@ -110,8 +121,13 @@ public class PutListActivity extends BaseActivity {
         dialog.show();
         JSONObject jsonObject=new JSONObject();
         try {
-
-            jsonObject.put("methodname","CreatePuStoreIn");
+            if(getIntent().getStringExtra("menuname").equals("采购入库")) {
+                jsonObject.put("methodname","CreatePuStoreIn");
+            }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
+                jsonObject.put("methodname","CreateCheckdetails");
+            }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
+                jsonObject.put("methodname", "CreateProductStoreIn");
+            }
             jsonObject.put("usercode",usercode);
             jsonObject.put("acccode",acccode);
             JSONArray jsonArray=new JSONArray();
@@ -151,8 +167,18 @@ public class PutListActivity extends BaseActivity {
                            arrivalHeadBeans.clear();
                            functionAdapter.notifyDataSetChanged();
                            SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
-                           sharedPreferences.edit().putString("putlist","").commit();
-                           sharedPreferences.edit().putString("putscan","").commit();
+                           if(getIntent().getStringExtra("menuname").equals("采购入库")) {
+                               sharedPreferences.edit().putString("CreatePuStoreInlist","").commit();
+                               sharedPreferences.edit().putString("CreatePuStoreInscan","").commit();
+                           }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
+
+                               sharedPreferences.edit().putString("CreateCheckdetailslist","").commit();
+                               sharedPreferences.edit().putString("CreateCheckdetailsscan","").commit();
+                           }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
+                               sharedPreferences.edit().putString("CreateProductStoreInlist","").commit();
+                               sharedPreferences.edit().putString("CreateProductStoreInscan","").commit();
+                           }
+
 
 
                        }
@@ -215,21 +241,42 @@ public class PutListActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
                             //delete sharedPreferences->scan item
-                            String stringscandata=sharedPreferences.getString("putscan","");
+                            String stringscandata="";
+                            if(getIntent().getStringExtra("menuname").equals("采购入库")) {
+                               stringscandata=sharedPreferences.getString("CreatePuStoreInscan","");
+                            }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
+                              stringscandata=sharedPreferences.getString("CreateCheckdetailsscan","");
+                            }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
+                               stringscandata=sharedPreferences.getString("CreateProductStoreInscan","");
+                            }
+
                             List<String> listcode = new ArrayList<>(Arrays.asList(stringscandata));
                             for (int j = 0; j <listcode.size() ; j++) {
                                 if(listcode.get(j).contains(arrivalHeadBeans.get(i).getIrowno())){
                                     listcode.remove(j);
                                 }
                             }
-                            sharedPreferences.edit().putString("putscan",listcode.toString()).commit();
-
                             arrivalHeadBeans.remove(i);
                             functionAdapter.notifyDataSetChanged();
                             textViewtotal.setText("总计:"+arrivalHeadBeans.size()+"条");
                             //delete sharedPreferences->putlist item
                             String strings= new Gson().toJson(arrivalHeadBeans);
-                            sharedPreferences.edit().putString("putlist",strings).commit();
+                             Log.i("list-->",strings);
+                            if(getIntent().getStringExtra("menuname").equals("采购入库")) {
+
+                                sharedPreferences.edit().putString("CreatePuStoreInlist",strings).commit();
+                                sharedPreferences.edit().putString("CreatePuStoreInscan",listcode.toString()).commit();
+                            }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
+
+                                sharedPreferences.edit().putString("CreateCheckdetailslist",strings).commit();
+                                sharedPreferences.edit().putString("CreateCheckdetailsscan",listcode.toString()).commit();
+                            }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
+
+                                sharedPreferences.edit().putString("CreateProductStoreInscanlist",strings).commit();
+                                sharedPreferences.edit().putString("CreateProductStoreInscanscan",listcode.toString()).commit();
+                            }
+
+
 
                         }
                     }).setNegativeButton("取消", new DialogInterface.OnClickListener() {

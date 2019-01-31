@@ -114,7 +114,7 @@ public class DispatchActivity extends BaseActivity {
             vh.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(DispatchActivity.this,DispatchdetailslistActivity.class);
+                    Intent intent=new Intent(DispatchActivity.this,SaleActivity.class);
                     intent.putExtra("id",mDatas.get(i).getID());
                     intent.putExtra("cwhcode",mDatas.get(i).getCwhcode());
                     intent.putExtra("ccode",mDatas.get(i).getCcode());

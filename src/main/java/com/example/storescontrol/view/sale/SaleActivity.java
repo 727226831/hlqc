@@ -1,5 +1,8 @@
 package com.example.storescontrol.view.sale;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -9,9 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import com.example.storescontrol.Url.Untils;
 import com.example.storescontrol.bean.CreatesaleoutBean;
 import com.example.storescontrol.bean.DispatchdetailsBean;
 import com.example.storescontrol.view.BaseActivity;
+import com.example.storescontrol.view.DetailListActivity;
+import com.example.storescontrol.view.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -35,42 +38,77 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DispatchdetailslistActivity extends BaseActivity {
+public class SaleActivity extends BaseActivity {
     RecyclerView recyclerView;
     private FunctionAdapter functionAdapter;
-    Button buttonSubmit;
+    Button buttonSubmit,buttonScan;
     TextView textViewTotal;
 
     DispatchdetailsBean dispatchdetailsBean=new DispatchdetailsBean();
     List<CreatesaleoutBean> createsaleoutBeanArrayList=new ArrayList<>();
-    ArrayList<String> arrayListselect=new ArrayList<>();
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dispatchdetailslist);
+        setContentView(R.layout.activity_detail_list);
         Untils.initTitle(getIntent().getStringExtra("menuname"),this);
         recyclerView=findViewById(R.id.rv_list);
         buttonSubmit=findViewById(R.id.b_submit);
+        buttonScan=findViewById(R.id.b_scan);
         textViewTotal=findViewById(R.id.tv_total);
-        getDispatchDetailsByccode();
+
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                createSaleOut();
             }
         });
+        buttonScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(SaleActivity.this,ProductionwarehousingActivity.class);
+                intent.putExtra("menuname",getIntent().getStringExtra("menuname"));
+                intent.putExtra("dispatchdetailsBean",dispatchdetailsBean);
+                startActivity(intent);
+            }
+        });
+
+
+        sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
+        clearCheckdata();
+        getDispatchDetailsByccode();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!sharedPreferences.getString("detailsBean","").equals("")){
+            Log.i("detailsBean",sharedPreferences.getString("detailsBean",""));
+            dispatchdetailsBean= new Gson().fromJson(sharedPreferences.getString("detailsBean",""),DispatchdetailsBean.class);
+            functionAdapter=new FunctionAdapter(dispatchdetailsBean.getData());
+            recyclerView.setLayoutManager(new LinearLayoutManager(SaleActivity.this));
+            recyclerView.addItemDecoration(new DividerItemDecoration(SaleActivity.this,DividerItemDecoration.VERTICAL));
+            recyclerView.setAdapter(functionAdapter);
+        }
     }
 
     private void createSaleOut() {
-           setData();
+
+        for (int i = 0; i <dispatchdetailsBean.getData().size() ; i++) {
+            if(!dispatchdetailsBean.getData().get(i).getIncomplete().equals("0")){
+                Toast.makeText(SaleActivity.this,"有未扫码条目，请完成后再提交",Toast.LENGTH_LONG).show();
+                return;
+            }
+
+        }
         JSONObject jsonObject=new JSONObject();
         try {
 
             jsonObject.put("methodname","CreateSaleOut");
             jsonObject.put("usercode",usercode);
             jsonObject.put("acccode",acccode);
-            JSONArray jsonArray=new JSONArray(new Gson().toJson(createsaleoutBeanArrayList));
+            JSONArray jsonArray=new JSONArray(new Gson().toJson(dispatchdetailsBean.getData()));
             jsonObject.put("datatetails",jsonArray);
 
         } catch (JSONException e) {
@@ -86,8 +124,9 @@ public class DispatchdetailslistActivity extends BaseActivity {
 
                 try {
                     if(response.code()==200) {
-                        Toast.makeText(DispatchdetailslistActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(SaleActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
+                        clearCheckdata();
+                        finish();
 
                     }
                 } catch (Exception e) {
@@ -101,25 +140,8 @@ public class DispatchdetailslistActivity extends BaseActivity {
     }
 
     private void setData() {
-
-
-        for (int i = 0; i <arrayListselect.size() ; i++) {
-             CreatesaleoutBean createsaleoutBean=new CreatesaleoutBean();
-             createsaleoutBean.setId(getIntent().getStringExtra("id"));
-             createsaleoutBean.setCcode(getIntent().getStringExtra("ccode"));
-             createsaleoutBean.setCwhcode(getIntent().getStringExtra("cwhcode"));
-             if(dispatchdetailsBean.getData().get(Integer.parseInt(arrayListselect.get(i))).getBWhPos()==1){
-                 createsaleoutBean.setCposcode("");
-             }
-            createsaleoutBean.setRowno(dispatchdetailsBean.getData().get(Integer.parseInt(arrayListselect.get(i))).getIrowno());
-            createsaleoutBean.setCinvcode(dispatchdetailsBean.getData().get(Integer.parseInt(arrayListselect.get(i))).getCinvcode());
-            createsaleoutBean.setCbatch(dispatchdetailsBean.getData().get(Integer.parseInt(arrayListselect.get(i))).getCbatch());
-            createsaleoutBean.setIquantity(dispatchdetailsBean.getData().get(Integer.parseInt(arrayListselect.get(i))).getIquantity());
-            createsaleoutBeanArrayList.add(createsaleoutBean);
-
-        }
-
     }
+
 
     private void getDispatchDetailsByccode() {
 
@@ -143,11 +165,19 @@ public class DispatchdetailslistActivity extends BaseActivity {
                 try {
                     if(response.code()==200) {
                        dispatchdetailsBean=new Gson().fromJson(response.body().string(),DispatchdetailsBean.class);
+                        for (int i = 0; i <dispatchdetailsBean.getData().size() ; i++) {
+                            if(dispatchdetailsBean.getData().get(i).getCompleted()==null){
+                                dispatchdetailsBean.getData().get(i).setCompleted("0");
+                                dispatchdetailsBean.getData().get(i).setIncomplete(dispatchdetailsBean.getData().get(i).getIquantity());
+                            }
+                        }
                         functionAdapter=new FunctionAdapter(dispatchdetailsBean.getData());
-                        recyclerView.setLayoutManager(new LinearLayoutManager(DispatchdetailslistActivity.this));
-                        recyclerView.addItemDecoration(new DividerItemDecoration(DispatchdetailslistActivity.this,DividerItemDecoration.VERTICAL));
+                        recyclerView.setLayoutManager(new LinearLayoutManager(SaleActivity.this));
+                        recyclerView.addItemDecoration(new DividerItemDecoration(SaleActivity.this,DividerItemDecoration.VERTICAL));
                         recyclerView.setAdapter(functionAdapter);
-                       // textViewTotal.setText("总计："+dispatchdetailsBean.getData().size()+"条");
+
+                        sharedPreferences.edit().putString("DispatchDetailsBean",new Gson().toJson(dispatchdetailsBean.getData())).commit();
+                        textViewTotal.setText("总计："+dispatchdetailsBean.getData().size()+"条");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -164,7 +194,7 @@ public class DispatchdetailslistActivity extends BaseActivity {
         @NonNull
         @Override
         public FunctionAdapter.VH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            View v=getLayoutInflater().inflate(R.layout.item_dispatchdetails,viewGroup,false);
+            View v=getLayoutInflater().inflate(R.layout.item_detail_list,viewGroup,false);
             return new FunctionAdapter.VH(v);
         }
 
@@ -176,31 +206,14 @@ public class DispatchdetailslistActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull  FunctionAdapter.VH vh,final int i) {
-            vh.textViewnumber.setText(i+1+"");
-            vh.textViewcinvname.setText("品名："+mDatas.get(i).getCinvname());
-            vh.textViewirowno.setText("行号："+mDatas.get(i).getIrowno());
-            vh.textViewbWhPos.setText("库号："+mDatas.get(i).getBWhPos());
-            vh.textViewcinvcode.setText("料号："+mDatas.get(i).getCinvcode());
-            vh.textViewcbatch.setText("批号："+mDatas.get(i).getCbatch());
-            vh.textViewiquantity.setText("数量："+mDatas.get(i).getIquantity());
-            vh.textViewcinvstd.setText("规格型号："+mDatas.get(i).getCinvstd());
-            vh.checkBoxselect.setTag(""+i);
-
-            vh.checkBoxselect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                      if(isChecked){
-                         arrayListselect.add(buttonView.getTag().toString());
-
-                      }else {
-                          arrayListselect.remove(buttonView.getTag().toString());
-
-                      }
-                    Log.i("select--->",arrayListselect.toString());
-                    textViewTotal.setText("总计："+arrayListselect.size()+"条");
-                }
-            });
+            vh.textViewDetails.setText(mDatas.get(i).getCinvcode());
+            vh.textViewcposition.setText(mDatas.get(i).getBWhPos()+"");
+            vh.textViewtag.setText(i+1+"");
+            vh.textViewcBatch.setText("批号："+mDatas.get(i).getCbatch());
+            vh.textViewcInvName.setText("名称："+mDatas.get(i).getCinvname()+"/"+mDatas.get(i).getCinvstd());
+            vh.textViewiQuantity.setText("数量："+mDatas.get(i).getIquantity());
+            vh.textViewcompleted.setText("已扫码："+mDatas.get(i).getCompleted());
+            vh.textViewincomplete.setText("未扫码："+ mDatas.get(i).getIncomplete());
         }
 
         @Override
@@ -208,23 +221,23 @@ public class DispatchdetailslistActivity extends BaseActivity {
             return mDatas.size();
         }
         class  VH extends RecyclerView.ViewHolder{
-            
-            TextView textViewcinvname,textViewirowno,textViewbWhPos,textViewcinvcode,textViewcbatch,
-                    textViewiquantity,textViewcinvstd,textViewnumber;
-            RelativeLayout relativeLayout;
-            CheckBox checkBoxselect;
+
+            TextView textViewcposition,textViewDetails,textViewiQuantity,textViewtag,
+                    textViewcBatch,textViewcInvName,textViewcompleted,textViewincomplete,
+                    textViewCInvStd;
+            LinearLayout linearLayout;
             VH(@NonNull View itemView) {
                 super(itemView);
-                checkBoxselect=itemView.findViewById(R.id.cb_select);
-                relativeLayout=itemView.findViewById(R.id.l_input);
-                textViewnumber=itemView.findViewById(R.id.tv_number);
-                textViewcinvname=itemView.findViewById(R.id.tv_cinvname);
-                textViewirowno=itemView.findViewById(R.id.tv_irowno);
-                textViewbWhPos=itemView.findViewById(R.id.tv_bWhPos);
-                textViewcinvcode=itemView.findViewById(R.id.tv_cinvcode);
-                textViewcbatch=itemView.findViewById(R.id.tv_cBatch);
-                textViewiquantity=itemView.findViewById(R.id.tv_iquantity);
-                textViewcinvstd=itemView.findViewById(R.id.tv_cinvstd);
+                linearLayout=itemView.findViewById(R.id.l_input);
+                textViewcposition=itemView.findViewById(R.id.tv_cposition);
+                textViewDetails=itemView.findViewById(R.id.tv_details);
+                textViewiQuantity=itemView.findViewById(R.id.tv_iQuantity);
+                textViewtag=itemView.findViewById(R.id.tv_tag);
+                textViewcBatch=itemView.findViewById(R.id.tv_cBatch);
+                textViewcInvName=itemView.findViewById(R.id.tv_cInvName);
+                textViewcompleted=itemView.findViewById(R.id.tv_completed);
+                textViewincomplete=itemView.findViewById(R.id.tv_incomplete);
+                textViewCInvStd=itemView.findViewById(R.id.tv_CInvStd);
 
             }
         }

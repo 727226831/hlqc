@@ -211,17 +211,20 @@ public class PrintActivity extends BaseActivity {
     public void printeData() {
         viewtag.setDrawingCacheEnabled(true);
         viewtag.buildDrawingCache();
-        Bitmap bitmap=Bitmap.createBitmap(viewtag.getDrawingCache());
+
+        final Bitmap bitmap=Bitmap.createBitmap(viewtag.getDrawingCache());
         viewtag.destroyDrawingCache();
         Matrix matrix = new Matrix();
-        matrix.postScale(0.4f, 0.4f);
+        matrix.postScale(Float.parseFloat(binding.etScale.getText().toString()), Float.parseFloat(binding.etScale.getText().toString()));
         Bitmap bitmapnew=Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
        final Bitmap bmp = bitmapnew;
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                printerPort.setDensity(0x02, 10);
+
+                printerPort.setDensity(0x02, Integer.parseInt(binding.etDensity.getText().toString()));
+
                 printerPort.printBitmap(bmp);
               //  printerPort.adjustPosition(0, 240);
                 printerPort.printerLocation(0x20,10);

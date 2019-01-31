@@ -87,11 +87,10 @@ public class LoginActivity extends BaseActivity {
                 Log.i("json object",obj);
                 SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
                 if(sharedPreferences.getString("port","").equals("")){
-
                          sharedPreferences.edit().putString("port",Request.BASEURL).commit();
                 }
                 Request.URL=sharedPreferences.getString("port","");
-                Log.i("url--->",Request.URL);
+                Log.i("url--->",Request.URL+"/Handler.ashx");
                 Retrofit retrofit=new Retrofit.Builder().baseUrl(Request.URL).build();
                 RequestBody body=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),obj);
                 iUrl login = retrofit.create(iUrl.class);
@@ -130,8 +129,11 @@ public class LoginActivity extends BaseActivity {
                                     break;
                                 case 500:
                                     Toast.makeText(LoginActivity.this,"服务器内部错误。",Toast.LENGTH_LONG).show();
-
                                     break;
+                                case 404:
+                                    Toast.makeText(LoginActivity.this,"所请求的页面不存在或已被删除！",Toast.LENGTH_LONG).show();
+                                    break;
+
                             }
 
                         } catch (Exception e) {

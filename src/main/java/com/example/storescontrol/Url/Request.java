@@ -20,9 +20,9 @@ public class Request {
     public static Call<ResponseBody> getRequestbody(String obj) {
 
          OkHttpClient client = new OkHttpClient.Builder().
-                connectTimeout(30, TimeUnit.SECONDS).
-                readTimeout(30, TimeUnit.SECONDS).
-                writeTimeout(30, TimeUnit.SECONDS).build();
+                connectTimeout(120, TimeUnit.SECONDS).
+                readTimeout(120, TimeUnit.SECONDS).
+                writeTimeout(120, TimeUnit.SECONDS).build();
         Retrofit retrofit=new Retrofit.Builder().client(client).baseUrl(URL).build();
 
         RequestBody body=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),obj);

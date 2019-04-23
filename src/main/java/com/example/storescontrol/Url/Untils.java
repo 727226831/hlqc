@@ -12,7 +12,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class Untils {
     public static void initTitle(String title,final Activity activity) {
@@ -24,7 +27,7 @@ public class Untils {
         imageButtonreturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             activity.finish();
+                activity.finish();
             }
         });
     }
@@ -65,5 +68,28 @@ public class Untils {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
         return "IMG_" + dateFormat.format(date);
+    }
+    public static List<String> parseCode(String code,int type){
+        List<String> stringList=new ArrayList<>();
+        if(!code.isEmpty()){
+            String  numbers;
+            switch (type){
+                case 0:
+                    //$
+                    numbers=code.replace("$",",");
+                    break;
+                case 1:
+                    //|
+                    numbers=code.replace("|",",");
+                    break;
+                default:
+                    numbers=code.replace("$",",");
+                    break;
+            }
+
+            stringList = Arrays.asList(numbers.split(","));
+        }
+        return  stringList;
+
     }
 }

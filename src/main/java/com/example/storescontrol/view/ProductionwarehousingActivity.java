@@ -5,20 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -44,14 +41,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -73,7 +65,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
     int tag=-1;//0仓库 1料号
     Gson gson=new Gson();
     private  String old="1";
-    private  String cwhcode,cposition;
+    private  String cwhcode,cposition,updatecposition;
     private  String imageid="";
     Uri photoUri;
     int imageresultcode=100;
@@ -92,38 +84,42 @@ public class ProductionwarehousingActivity extends BaseActivity {
     double overplus=-1;
     boolean isError=true;
 
+
     int MY_PERMISSIONS_REQUEST_CALL_PHONE=300;
     int  MY_PERMISSIONS_REQUEST_CALL_PHONE2=400;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding=DataBindingUtil.setContentView(this,R.layout.activity_productionwarehousing);
+        binding=DataBindingUtil.setContentView(this, R.layout.activity_productionwarehousing);
 
         Untils.initTitle(getIntent().getStringExtra("menuname"),this);
+
         sharedPreferences=getSharedPreferences("sp",MODE_PRIVATE);
         if(getIntent().getStringExtra("menuname").equals("生产入库")){
             binding.lCvenabbname.setVisibility(View.GONE);
-            binding.lBatch.setVisibility(View.VISIBLE);
-            binding.bSearch.setVisibility(View.VISIBLE);
-            binding.tvTotal.setVisibility(View.VISIBLE);
+            binding.rlUpdate.setVisibility(View.GONE);
         }else  if(getIntent().getStringExtra("menuname").equals("采购入库")){
-            binding.lCvenabbname.setVisibility(View.VISIBLE);
-            binding.lBatch.setVisibility(View.VISIBLE);
-            binding.bSearch.setVisibility(View.VISIBLE);
-            binding.tvTotal.setVisibility(View.VISIBLE);
+            binding.rlUpdate.setVisibility(View.GONE);
         }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")||
                 getIntent().getStringExtra("menuname").equals("产成品入库")){
             binding.lCvenabbname.setVisibility(View.GONE);
             binding.lBatch.setVisibility(View.GONE);
-            binding.bSearch.setVisibility(View.VISIBLE);
-            binding.tvTotal.setVisibility(View.VISIBLE);
-        } else {
+            binding.rlUpdate.setVisibility(View.GONE);
+        }else  if(getIntent().getStringExtra("menuname").equals("货位调整")){
+            binding.lCvenabbname.setVisibility(View.GONE);
+        }else  if(getIntent().getStringExtra("menuname").equals("采购到货")){
+            binding.rlCdefine10.setVisibility(View.VISIBLE);
+            binding.rlUpdate.setVisibility(View.GONE);
+            binding.tvCcodekey.setText("采购订单号：");
+            binding.rlCwhcode.setVisibility(View.GONE);
 
-            binding.lCvenabbname.setVisibility(View.VISIBLE);
+        }
+        else {
             binding.lBatch.setVisibility(View.GONE);
             binding.bSearch.setVisibility(View.GONE);
             binding.tvTotal.setVisibility(View.GONE);
+            binding.rlUpdate.setVisibility(View.GONE);
             if(getIntent().getStringExtra("menuname").equals("销售出库")){
                 dispatchdetailsBean=new Gson().fromJson(sharedPreferences.getString("dispatchdetailsBean",""),DispatchdetailsBean.class);
             }else {
@@ -171,9 +167,11 @@ public class ProductionwarehousingActivity extends BaseActivity {
             }
         });
         binding.etCwhcode.setOnKeyListener(onKeyListener);
+        binding.etUpdatecwhcode.setOnKeyListener(onKeyListener);
         binding.etBatch.setOnKeyListener(onKeyListener);
         binding.ibUpload.setOnClickListener(onClickListener);
         binding.ivCwhcode.setOnClickListener(onClickListener);
+        binding.ivUpdatecwhcode.setOnClickListener(onClickListener);
         binding.ivBatch.setOnClickListener(onClickListener);
         binding.bSubmit.setOnClickListener(onClickListener);
         binding.bSearch.setOnClickListener(onClickListener);
@@ -182,68 +180,67 @@ public class ProductionwarehousingActivity extends BaseActivity {
     }
 
 
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-            //上传图片
-            if (requestCode == imageresultcode) {
-                    if (photoUri != null) {
-                        uploadBatchPicture(file.getAbsolutePath());
-                    }
-
+        //上传图片
+        if (requestCode == imageresultcode) {
+            if (photoUri != null) {
+                uploadBatchPicture(file.getAbsolutePath());
             }
-            //扫码
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if(result != null) {
-                if(result.getContents() != null) {
-                    String code=result.getContents();
-                    Log.i("scan",code);
 
-                    switch (tag){
-                        case 0://仓位
-                            if(code.contains("$")){
-                                Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
-                            }else {
-                                binding.etCwhcode.setText(code);
-                                getCwhcode();
-                            }
-                            break;
-                        case 1://存货编码
+        }
+        //扫码
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() != null) {
+                String code=result.getContents();
+                Log.i("scan",code);
 
-                            if(code.contains("$")){
-                                binding.etBatch.setText(code);
-                                parseCode(code);
-                            }else {
-                                Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
-                            }
-                            break;
-                    }
+                switch (tag){
+                    case 0://仓位
+                        if(code.contains("$")){
+                            Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
+                        }else {
+                            binding.etCwhcode.setText(code);
+                            getCwhcode(0);
+                        }
+                        break;
+                    case 1://存货编码
+
+                        if(code.contains("$")){
+                            stringScan=code;
+                            binding.etBatch.setText(code);
+                            list=Untils.parseCode(code,0);
+                            getInventoryBycode(list.get(0));
+                            binding.etTimes.setText("1");
+
+                        }else {
+                            Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    case 2:
+                        //调入货位
+                        if(code.contains("$")){
+                            Toast.makeText(ProductionwarehousingActivity.this,"类型错误",Toast.LENGTH_LONG).show();
+                        }else {
+                            binding.etUpdatecwhcode.setText(code);
+                            getCwhcode(1);
+
+                        }
+                        break;
 
                 }
-            } else {
-                super.onActivityResult(requestCode, resultCode, data);
+
             }
-
-
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
 
-    /**
-     * parse code
-     * @param code
-     */
-    private void parseCode(String code){
-        stringScan=code;
-        if(code.isEmpty()){
-            return;
-        }
 
-        String  numbers=code.replace("$",",");
-        list = Arrays.asList(numbers.split(","));
-
-
-        getInventoryBycode(list.get(0));
-        binding.etTimes.setText("1");
     }
+
+
 
 
     private void getInventoryBycode(String cinvcode) {
@@ -262,7 +259,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         Call<ResponseBody> data =Request.getRequestbody(obj);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 try {
                     if(response.code()==200) {
@@ -271,12 +268,17 @@ public class ProductionwarehousingActivity extends BaseActivity {
                         if(jsonArray.isNull(0)!=true){
                             String data=jsonArray.getJSONObject(0).toString();
                             arrivalHeadBean=gson.fromJson(data,ArrivalHeadBean.class);
-                            string1=data.substring(1,data.length()-1)+",";
                             binding.setBean(arrivalHeadBean);
-                            ccode =list.get(4);
-                            if(ccode !=null) {
+
+                            if(list.size()>3) {
+                                ccode = list.get(4);
                                 getArrivalHeadBycode(ccode);
+                                binding.tvCvenbatch.setText("供应商批次："+list.get(7));
+                                arrivalHeadBean.setCvenbatch(list.get(7));
+
                             }
+                            string1=new Gson().toJson(arrivalHeadBean).substring(1,new Gson().toJson(arrivalHeadBean).length()-1)+",";
+
                         }else {
 
                             Toast.makeText(ProductionwarehousingActivity.this,"未找到数据",Toast.LENGTH_SHORT).show();
@@ -287,7 +289,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             } });
 
@@ -308,7 +310,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         Call<ResponseBody> data =Request.getRequestbody(obj);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 try {
                     if(response.code()==200) {
@@ -327,14 +329,17 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             arrivalHeadBean.setIrowno(list.get(5));
                             arrivalHeadBean.setImageid(imageid);
 
+
                             arrivalHeadBean.setCwhcode(cwhcode);
+
+
+
                             if(file!=null) {
                                 arrivalHeadBean.setFile(file.getAbsolutePath());
                             }
                             binding.setBean(arrivalHeadBean);
                             binding.tvNumber.setText(arrivalHeadBean.getIquantity()+arrivalHeadBean.getCComUnitName());
                             old=arrivalHeadBean.getIquantity();
-
                             submit();
 
                         }else {
@@ -351,6 +356,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                                 }
                                 binding.setBean(arrivalHeadBean);
                                 binding.tvNumber.setText(arrivalHeadBean.getIquantity()+arrivalHeadBean.getCComUnitName());
+
                                 submit();
 
                             }
@@ -361,7 +367,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             } });
     }
@@ -377,10 +383,22 @@ public class ProductionwarehousingActivity extends BaseActivity {
                                     "重新查询，请清空该项所有字符",Toast.LENGTH_LONG).show();
                             break;
                         }
-                        getCwhcode();
+                        getCwhcode(0);
                         break;
                     case R.id.et_batch:
-                        parseCode(binding.etBatch.getText().toString());
+                        stringScan=binding.etBatch.getText().toString();
+                        list=Untils.parseCode(binding.etBatch.getText().toString(),0);
+
+                        getInventoryBycode(list.get(0));
+                        binding.etTimes.setText("1");
+                        break;
+                    case R.id.et_updatecwhcode:
+                        if(binding.etUpdatecwhcode.getText().toString().contains("仓库")){
+                            Toast.makeText(ProductionwarehousingActivity.this,"如需" +
+                                    "重新查询，请清空该项所有字符",Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                        getCwhcode(1);
                         break;
                 }
             }
@@ -398,6 +416,10 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
                 case R.id.iv_cwhcode:
                     tag=0;
+                    openScan();
+                    break;
+                case R.id.iv_updatecwhcode:
+                    tag=2;
                     openScan();
                     break;
                 case R.id.iv_add:
@@ -419,11 +441,14 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 case R.id.b_search:
                     Intent intent=new Intent(ProductionwarehousingActivity.this,PutListActivity.class);
                     intent.putExtra("menuname",getIntent().getStringExtra("menuname"));
+                    if(binding.rlCdefine10.getVisibility()==View.VISIBLE){
+                        intent.putExtra("cdefine10",binding.etCdefine10.getText().toString());
+                    }
                     startActivity(intent);
                     break;
                 case R.id.b_submit:
 
-                         submit();
+                    submit();
 
                     break;
                 case R.id.ib_upload:
@@ -517,6 +542,10 @@ public class ProductionwarehousingActivity extends BaseActivity {
         }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
 
             stringarrivalHeadBeans= sharedPreferences.getString("CreateProductStoreInlist", "");
+        }else  if(getIntent().getStringExtra("menuname").equals("货位调整")){
+            stringarrivalHeadBeans= sharedPreferences.getString("UpdatePositionTRlist", "");
+        }else  if(getIntent().getStringExtra("menuname").equals("采购到货")){
+            stringarrivalHeadBeans= sharedPreferences.getString("CreatePuArrivalInlist", "");
         }
 
 
@@ -530,16 +559,22 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 arrivalHeadBeans.add(gson.fromJson(jsonElement, ArrivalHeadBean.class));
             }
         }
+
         if(!isCheck) {
             if (arrivalHeadBean.getCwhcode() == null) {
-                Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
-                return;
+                if(!getIntent().getStringExtra("menuname").equals("采购到货")){
+                    Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
             }
         }
+
         if(stringScan==null){
             return;
         }
         String stringscandata="";
+
         if(isCheck){
             stringscandata=sharedPreferences.getString("checkscan","");
         }else if(getIntent().getStringExtra("menuname").equals("采购入库")) {
@@ -551,6 +586,11 @@ public class ProductionwarehousingActivity extends BaseActivity {
         }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
 
             stringscandata=sharedPreferences.getString("CreateProductStoreInscan","");
+        }else  if(getIntent().getStringExtra("menuname").equals("货位调整")){
+
+            stringscandata=sharedPreferences.getString("UpdatePositionTRscan","");
+        }else  if(getIntent().getStringExtra("menuname").equals("采购到货")){
+            stringscandata=sharedPreferences.getString("CreatePuArrivalInscan","");
         }
 
 
@@ -564,7 +604,11 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
         binding.tvTotal.setText("总计："+arrivalHeadBeans.size()+"条");
         //update sharedPreferences->putlist item
+        if(getIntent().getStringExtra("menuname").equals("货位调整")){
+            arrivalHeadBean.setInposition(updatecposition);
+        }
         arrivalHeadBean.setCposition(cposition);
+
         arrivalHeadBean.setIquantity(binding.tvNumber.getText().toString().
                 replace(arrivalHeadBean.getCComUnitName(),""));
         arrivalHeadBeans.add(arrivalHeadBean);
@@ -577,7 +621,12 @@ public class ProductionwarehousingActivity extends BaseActivity {
             sharedPreferences.edit().putString("CreateCheckdetailslist", strings).commit();
         }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
             sharedPreferences.edit().putString("CreateProductStoreInlist", strings).commit();
+        }else  if(getIntent().getStringExtra("menuname").equals("货位调整")){
+            sharedPreferences.edit().putString("UpdatePositionTRlist", strings).commit();
+        }else  if(getIntent().getStringExtra("menuname").equals("采购到货")){
+            sharedPreferences.edit().putString("CreatePuArrivalInlist", strings).commit();
         }
+
 
 
 
@@ -594,9 +643,11 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
 
         getCount();
+
         initBatch();
         if(isCheck){
             sharedPreferences.edit().putString("checkscan",listscan.toString()).commit();
+
             checkData();
         }else    if(getIntent().getStringExtra("menuname").equals("采购入库")) {
             sharedPreferences.edit().putString("CreatePuStoreInscan",listscan.toString()).commit();
@@ -604,6 +655,10 @@ public class ProductionwarehousingActivity extends BaseActivity {
             sharedPreferences.edit().putString("CreateCheckdetailsscan",listscan.toString()).commit();
         }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
             sharedPreferences.edit().putString("CreateProductStoreInscan",listscan.toString()).commit();
+        }else  if(getIntent().getStringExtra("menuname").equals("货位调整")){
+            sharedPreferences.edit().putString("UpdatePositionTRscan",listscan.toString()).commit();
+        }else  if(getIntent().getStringExtra("menuname").equals("采购到货")){
+            sharedPreferences.edit().putString("CreatePuArrivalInscan",listscan.toString()).commit();
         }
 
 
@@ -614,6 +669,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
      */
     private void initBatch() {
         binding.etBatch.setText("");
+
         Picasso.get().load(getResources().getResourceName(R.mipmap.ic_defaultpic)).into(binding.ibUpload);
         file=null;
         binding.etBatch.setFocusable(true);
@@ -631,7 +687,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 return;
             }
             if(getIntent().getStringExtra("menuname").equals("销售出库")) {
-               checkSale();
+                checkSale();
             }else {
                 checkList();
             }
@@ -641,19 +697,13 @@ public class ProductionwarehousingActivity extends BaseActivity {
             }
 
 
-
-
-
             if (isPrint) {
-
-
 
                 if(overplus!=-1){
                     Intent intent = new Intent(ProductionwarehousingActivity.this, PrintActivity.class);
+                    intent.putExtra("arrivalHeadBean",arrivalHeadBean);
                     intent.putExtra("code", stringScan);
                     intent.putExtra("overplus", overplus);
-                    intent.putExtra("cvenabbname", arrivalHeadBean.getCvenabbname());
-                    intent.putExtra("ddate", arrivalHeadBean.getDdate());
                     startActivity(intent);
                 }
 
@@ -685,35 +735,34 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
                 if(dIncomplete<Double.parseDouble(arrivalHeadBean.getIquantity())){
                     overplus = Double.parseDouble(arrivalHeadBean.getIquantity())-dIncomplete;
-                dispatchdetailsBean.getData().get(i).setCompleted(dispatchdetailsBean.getData().get(i).getIquantity());
-                dispatchdetailsBean.getData().get(i).setIncomplete("0");
-                Toast.makeText(ProductionwarehousingActivity.this, "数量超过上限", Toast.LENGTH_LONG).show();
-                if (!isPrint) {
-                    return;
+                    dispatchdetailsBean.getData().get(i).setCompleted(dispatchdetailsBean.getData().get(i).getIquantity());
+                    dispatchdetailsBean.getData().get(i).setIncomplete("0");
+
+                    if (!isPrint) {
+                        return;
+                    }
+
+                } else {
+
+                    dIncomplete = dIncomplete-(Double.parseDouble(arrivalHeadBean.getIquantity()));
+                    dCompleted = dCompleted+(Double.parseDouble(arrivalHeadBean.getIquantity()));
+                    dispatchdetailsBean.getData().get(i).setCompleted(dCompleted + "");
+                    dispatchdetailsBean.getData().get(i).setIncomplete(dIncomplete + "");
+
                 }
+                dispatchdetailsBean.getData().get(i).setCposition(cposition);
+                sharedPreferences.edit().putString("detailsBean", new Gson().toJson(dispatchdetailsBean)).commit();
 
-            } else {
 
-                dIncomplete = dIncomplete-(Double.parseDouble(arrivalHeadBean.getIquantity()));
-                dCompleted = dCompleted+(Double.parseDouble(arrivalHeadBean.getIquantity()));
-                dispatchdetailsBean.getData().get(i).setCompleted(dCompleted + "");
-                dispatchdetailsBean.getData().get(i).setIncomplete(dIncomplete + "");
+
 
             }
-            dispatchdetailsBean.getData().get(i).setCposition(cposition);
-            sharedPreferences.edit().putString("detailsBean", new Gson().toJson(dispatchdetailsBean)).commit();
-
-
-
-
-        }
 
         }
     }
 
     private void checkList() {
         for (int i = 0; i < detailsBean.getData().size(); i++) {
-
 
             if(detailsBean.getData().get(i).getCBatch()==null &&list.get(0).equals(detailsBean.getData().get(i).getCInvCode())) {
                 isBatch = true;
@@ -723,9 +772,9 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 isCInvCode = true;
             }
             if (isCInvCode && isBatch ) {
-                 isError=false;
-                 isCInvCode=false;
-                 isBatch=false;
+                isError=false;
+                isCInvCode=false;
+                isBatch=false;
                 iQuantitytotal=Double.parseDouble(detailsBean.getData().get(i).getIncomplete());
                 Double dIncomplete=Double.parseDouble(detailsBean.getData().get(i).getIncomplete());
 
@@ -764,6 +813,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         arrivalHeadBean=null;
         binding.setBean(arrivalHeadBean);
         binding.tvNumber.setText("");
+        binding.tvCvenbatch.setText("");
         getCount();
     }
     //获取已加入清单量
@@ -774,10 +824,14 @@ public class ProductionwarehousingActivity extends BaseActivity {
             stringarrivalHeadBeans = sharedPreferences.getString("CreatePuStoreInlist", "");
         }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
 
-          stringarrivalHeadBeans = sharedPreferences.getString("CreateCheckdetailslist", "");
+            stringarrivalHeadBeans = sharedPreferences.getString("CreateCheckdetailslist", "");
         }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
 
             stringarrivalHeadBeans = sharedPreferences.getString("CreateProductStoreInlist", "");
+        }else  if(getIntent().getStringExtra("menuname").equals("货位调整")){
+            stringarrivalHeadBeans = sharedPreferences.getString("UpdatePositionTRlist", "");
+        }else  if(getIntent().getStringExtra("menuname").equals("采购到货")){
+            stringarrivalHeadBeans = sharedPreferences.getString("CreatePuArrivalInlist", "");
         }
         if (!stringarrivalHeadBeans.equals("")) {
             Gson gson = new Gson();
@@ -834,12 +888,20 @@ public class ProductionwarehousingActivity extends BaseActivity {
         return state.equals(Environment.MEDIA_MOUNTED);
     }
 
-    private void getCwhcode() {
+    private void getCwhcode(final  int type) {
         JSONObject jsonObject=new JSONObject();
         try {
             jsonObject.put("methodname","getWhcodeBypocode");
             jsonObject.put("acccode",acccode);
-            jsonObject.put("cposition",binding.etCwhcode.getText().toString());
+            switch (type){
+                case 0:
+                    jsonObject.put("cposition",binding.etCwhcode.getText().toString());
+                    break;
+                case 1:
+                    jsonObject.put("cposition",binding.etUpdatecwhcode.getText().toString());
+                    break;
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -849,15 +911,25 @@ public class ProductionwarehousingActivity extends BaseActivity {
         Call<ResponseBody> data =Request.getRequestbody(obj);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 try {
                     if(response.code()==200) {
                         JSONObject object=new JSONObject(response.body().string());
                         cwhcode=object.getString("cwhcode");
                         if(!cwhcode.isEmpty()){
-                            cposition=binding.etCwhcode.getText().toString();
-                            binding.etCwhcode.setText(binding.etCwhcode.getText().toString()+"/仓库"+object.getString("cwhcode"));
+                            switch (type){
+                                case 0:
+                                    cposition=binding.etCwhcode.getText().toString();
+                                    binding.etCwhcode.setText(binding.etCwhcode.getText().toString()+"/仓库"+object.getString("cwhcode"));
+                                    break;
+                                case 1:
+                                    updatecposition=binding.etUpdatecwhcode.getText().toString();
+                                    binding.etUpdatecwhcode.setText(binding.etUpdatecwhcode.getText().toString()+"/仓库"+object.getString("cwhcode"));
+
+                                    break;
+                            }
+
                             binding.etBatch.setFocusable(true);
                             binding.etBatch.setFocusableInTouchMode(true);
                             binding.etBatch.requestFocus();
@@ -870,7 +942,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             } });
     }
@@ -898,7 +970,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
         Call<ResponseBody> data =Request.getRequestbody(obj);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 dialog.dismiss();
                 try {
 
@@ -917,7 +989,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 dialog.dismiss();
                 if(t.getMessage().equals("timeout")){
                     Toast.makeText(ProductionwarehousingActivity.this,"连接超时",Toast.LENGTH_LONG).show();

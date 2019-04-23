@@ -215,6 +215,7 @@ public class PrintActivity extends BaseActivity {
         final Bitmap bitmap=Bitmap.createBitmap(viewtag.getDrawingCache());
         viewtag.destroyDrawingCache();
         Matrix matrix = new Matrix();
+
         matrix.postScale(Float.parseFloat(binding.etScale.getText().toString()), Float.parseFloat(binding.etScale.getText().toString()));
         Bitmap bitmapnew=Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
        final Bitmap bmp = bitmapnew;
@@ -226,6 +227,7 @@ public class PrintActivity extends BaseActivity {
                 printerPort.setDensity(0x02, Integer.parseInt(binding.etDensity.getText().toString()));
 
                 printerPort.printBitmap(bmp);
+                printerPort.setPaperType(0x02,0x20);
               //  printerPort.adjustPosition(0, 240);
                 printerPort.printerLocation(0x20,10);
                 if (printerPort.getSendResult(10000).equals("OK")) {

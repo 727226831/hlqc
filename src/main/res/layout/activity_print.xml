@@ -134,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
-            android:text="0.6f"
+            android:text="1f"
             android:textSize="14sp"
             android:id="@+id/et_Scale"
             android:layout_width="match_parent"

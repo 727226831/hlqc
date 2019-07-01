@@ -207,7 +207,7 @@ public class SaleActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(@NonNull  FunctionAdapter.VH vh,final int i) {
             vh.textViewDetails.setText(mDatas.get(i).getCinvcode());
-            vh.textViewcposition.setText(mDatas.get(i).getBWhPos()+"");
+            vh.textViewcposition.setText("行号："+mDatas.get(i).getIrowno()+"");
             vh.textViewtag.setText(i+1+"");
             vh.textViewcBatch.setText("批号："+mDatas.get(i).getCbatch());
             vh.textViewcInvName.setText("名称："+mDatas.get(i).getCinvname()+"/"+mDatas.get(i).getCinvstd());

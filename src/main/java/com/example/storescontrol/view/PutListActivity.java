@@ -73,6 +73,7 @@ public class PutListActivity extends BaseActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
         String data="";
+
         if(getIntent().getStringExtra("menuname").equals("采购入库")) {
              data= sharedPreferences.getString("CreatePuStoreInlist","");
 
@@ -272,8 +273,9 @@ public class PutListActivity extends BaseActivity {
                                 sharedPreferences.edit().putString("CreateCheckdetailsscan",listcode.toString()).commit();
                             }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
 
-                                sharedPreferences.edit().putString("CreateProductStoreInscanlist",strings).commit();
-                                sharedPreferences.edit().putString("CreateProductStoreInscanscan",listcode.toString()).commit();
+                                sharedPreferences.edit().putString("CreateProductStoreInlist",strings).commit();
+                                sharedPreferences.edit().putString("CreateProductStoreInscan",listcode.toString()).commit();
+
                             }
 
 

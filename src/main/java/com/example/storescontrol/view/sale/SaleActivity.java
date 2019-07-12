@@ -84,7 +84,7 @@ public class SaleActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         if(!sharedPreferences.getString("detailsBean","").equals("")){
-            Log.i("detailsBean",sharedPreferences.getString("detailsBean",""));
+
             dispatchdetailsBean= new Gson().fromJson(sharedPreferences.getString("detailsBean",""),DispatchdetailsBean.class);
             functionAdapter=new FunctionAdapter(dispatchdetailsBean.getData());
             recyclerView.setLayoutManager(new LinearLayoutManager(SaleActivity.this));
@@ -96,7 +96,8 @@ public class SaleActivity extends BaseActivity {
     private void createSaleOut() {
 
         for (int i = 0; i <dispatchdetailsBean.getData().size() ; i++) {
-            if(!dispatchdetailsBean.getData().get(i).getIncomplete().equals("0")){
+
+            if( Double.parseDouble(dispatchdetailsBean.getData().get(i).getIncomplete())!=0){
                 Toast.makeText(SaleActivity.this,"有未扫码条目，请完成后再提交",Toast.LENGTH_LONG).show();
                 return;
             }
@@ -108,6 +109,7 @@ public class SaleActivity extends BaseActivity {
             jsonObject.put("methodname","CreateSaleOut");
             jsonObject.put("usercode",usercode);
             jsonObject.put("acccode",acccode);
+            jsonObject.put("ccode",getIntent().getStringExtra("ccode"));
             JSONArray jsonArray=new JSONArray(new Gson().toJson(dispatchdetailsBean.getData()));
             jsonObject.put("datatetails",jsonArray);
 
@@ -139,8 +141,7 @@ public class SaleActivity extends BaseActivity {
             } });
     }
 
-    private void setData() {
-    }
+
 
 
     private void getDispatchDetailsByccode() {
@@ -176,7 +177,7 @@ public class SaleActivity extends BaseActivity {
                         recyclerView.addItemDecoration(new DividerItemDecoration(SaleActivity.this,DividerItemDecoration.VERTICAL));
                         recyclerView.setAdapter(functionAdapter);
 
-                        sharedPreferences.edit().putString("DispatchDetailsBean",new Gson().toJson(dispatchdetailsBean.getData())).commit();
+                        sharedPreferences.edit().putString("dispatchdetailsBean",new Gson().toJson(dispatchdetailsBean)).commit();
                         textViewTotal.setText("总计："+dispatchdetailsBean.getData().size()+"条");
                     }
                 } catch (Exception e) {

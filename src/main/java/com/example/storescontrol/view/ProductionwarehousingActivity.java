@@ -121,6 +121,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
             binding.tvTotal.setVisibility(View.GONE);
             binding.rlUpdate.setVisibility(View.GONE);
             if(getIntent().getStringExtra("menuname").equals("销售出库")){
+                Log.i("dispatchdetailsBean",sharedPreferences.getString("dispatchdetailsBean",""));
                 dispatchdetailsBean=new Gson().fromJson(sharedPreferences.getString("dispatchdetailsBean",""),DispatchdetailsBean.class);
             }else {
                 detailsBean=new Gson().fromJson(sharedPreferences.getString("detailsBean",""),DetailsBean.class);
@@ -273,8 +274,10 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             if(list.size()>3) {
                                 ccode = list.get(4);
                                 getArrivalHeadBycode(ccode);
-                                binding.tvCvenbatch.setText("供应商批次："+list.get(7));
-                                arrivalHeadBean.setCvenbatch(list.get(7));
+                                 if(list.size()>7) {
+                                     binding.tvCvenbatch.setText("供应商批次：" + list.get(7));
+                                     arrivalHeadBean.setCvenbatch(list.get(7));
+                                 }
 
                             }
                             string1=new Gson().toJson(arrivalHeadBean).substring(1,new Gson().toJson(arrivalHeadBean).length()-1)+",";
@@ -715,49 +718,39 @@ public class ProductionwarehousingActivity extends BaseActivity {
         for (int i = 0; i < dispatchdetailsBean.getData().size(); i++) {
 
 
-            if (dispatchdetailsBean.getData().get(i).getCbatch() == null && list.get(0).equals(dispatchdetailsBean.getData().get(i).getCinvcode())) {
-                isBatch = true;
-                isCInvCode = true;
+           if (list.get(0).equals(dispatchdetailsBean.getData().get(i).getCinvcode()) &&
+                    list.get(1).equals(dispatchdetailsBean.getData().get(i).getCbatch())) {
 
-            } else if (list.get(0).equals(dispatchdetailsBean.getData().get(i).getCinvcode()) &&
-                    list.get(1).equals(dispatchdetailsBean.getData().get(i).getCinvcode())) {
-                isBatch = true;
-                isCInvCode = true;
+               isError=false;
+               iQuantitytotal = Double.parseDouble(dispatchdetailsBean.getData().get(i).getIncomplete());
+               double dIncomplete = Double.parseDouble(dispatchdetailsBean.getData().get(i).getIncomplete());
+               double dCompleted = Double.parseDouble(dispatchdetailsBean.getData().get(i).getCompleted());
+               if (arrivalHeadBean.getIquantity() == null) {
+                   return;
+               }
+
+               if(dIncomplete<Double.parseDouble(arrivalHeadBean.getIquantity())){
+                   overplus = Double.parseDouble(arrivalHeadBean.getIquantity())-dIncomplete;
+                   dispatchdetailsBean.getData().get(i).setCompleted(dispatchdetailsBean.getData().get(i).getIquantity());
+                   dispatchdetailsBean.getData().get(i).setIncomplete("0");
+
+                   if (!isPrint) {
+                       return;
+                   }
+
+               } else {
+
+                   dIncomplete = dIncomplete-(Double.parseDouble(arrivalHeadBean.getIquantity()));
+                   dCompleted = dCompleted+(Double.parseDouble(arrivalHeadBean.getIquantity()));
+                   dispatchdetailsBean.getData().get(i).setCompleted(dCompleted + "");
+                   dispatchdetailsBean.getData().get(i).setIncomplete(dIncomplete + "");
+
+               }
+               dispatchdetailsBean.getData().get(i).setCposition(cposition);
+               sharedPreferences.edit().putString("detailsBean", new Gson().toJson(dispatchdetailsBean)).commit();
             }
 
-            if (isCInvCode && isBatch) {
-                isError=false;
-                iQuantitytotal = Double.parseDouble(dispatchdetailsBean.getData().get(i).getIncomplete());
-                double dIncomplete = Double.parseDouble(dispatchdetailsBean.getData().get(i).getIncomplete());
-                double dCompleted = Double.parseDouble(dispatchdetailsBean.getData().get(i).getCompleted());
-                if (arrivalHeadBean.getIquantity() == null) {
-                    return;
-                }
 
-                if(dIncomplete<Double.parseDouble(arrivalHeadBean.getIquantity())){
-                    overplus = Double.parseDouble(arrivalHeadBean.getIquantity())-dIncomplete;
-                    dispatchdetailsBean.getData().get(i).setCompleted(dispatchdetailsBean.getData().get(i).getIquantity());
-                    dispatchdetailsBean.getData().get(i).setIncomplete("0");
-
-                    if (!isPrint) {
-                        return;
-                    }
-
-                } else {
-
-                    dIncomplete = dIncomplete-(Double.parseDouble(arrivalHeadBean.getIquantity()));
-                    dCompleted = dCompleted+(Double.parseDouble(arrivalHeadBean.getIquantity()));
-                    dispatchdetailsBean.getData().get(i).setCompleted(dCompleted + "");
-                    dispatchdetailsBean.getData().get(i).setIncomplete(dIncomplete + "");
-
-                }
-                dispatchdetailsBean.getData().get(i).setCposition(cposition);
-                sharedPreferences.edit().putString("detailsBean", new Gson().toJson(dispatchdetailsBean)).commit();
-
-
-
-
-            }
 
         }
     }

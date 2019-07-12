@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
@@ -48,7 +49,7 @@ public class DispatchActivity extends BaseActivity {
     }
     private void getData() {
 
-        JSONObject jsonObject=new JSONObject();
+        final JSONObject jsonObject=new JSONObject();
         try {
 
             jsonObject.put("methodname","getDispatchBywhcode");
@@ -70,8 +71,13 @@ public class DispatchActivity extends BaseActivity {
 
                 try {
                     if(response.code()==200) {
+                        JSONObject js=new JSONObject(response.body().string());
 
-                        dispatchBean=new Gson().fromJson(response.body().string(),DispatchBean.class);
+                       if(js.getString("Resultcode").equals("0")){
+                           Toast.makeText(DispatchActivity.this,js.getString("ResultMessage"),Toast.LENGTH_SHORT).show();
+                           return;
+                       }
+                        dispatchBean=new Gson().fromJson(js.toString(),DispatchBean.class);
                         functionAdapter=new FunctionAdapter(dispatchBean.getData());
                         recyclerView.setLayoutManager(new LinearLayoutManager(DispatchActivity.this));
                         recyclerView.addItemDecoration(new DividerItemDecoration(DispatchActivity.this,DividerItemDecoration.VERTICAL));

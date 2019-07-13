@@ -60,7 +60,7 @@ public class DetailListActivity extends BaseActivity {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dialog.show();
                 checkData();
             }
         });
@@ -99,6 +99,7 @@ public class DetailListActivity extends BaseActivity {
              double number=Double.parseDouble(detailsBean.getData().get(i).getIncomplete());
               if(number!=0){
                   Toast.makeText(DetailListActivity.this,"有未扫码条目，请完成后再提交",Toast.LENGTH_LONG).show();
+                  dialog.dismiss();
                   return;
               }
 
@@ -127,7 +128,7 @@ public class DetailListActivity extends BaseActivity {
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                dialog.dismiss();
                 try {
                     if(response.code()==200) {
                         Toast.makeText(DetailListActivity.this,response.body().string(),Toast.LENGTH_LONG).show();

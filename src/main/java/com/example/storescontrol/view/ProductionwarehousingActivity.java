@@ -121,10 +121,10 @@ public class ProductionwarehousingActivity extends BaseActivity {
             binding.tvTotal.setVisibility(View.GONE);
             binding.rlUpdate.setVisibility(View.GONE);
             if(getIntent().getStringExtra("menuname").equals("销售出库")){
-                Log.i("dispatchdetailsBean",sharedPreferences.getString("dispatchdetailsBean",""));
-                dispatchdetailsBean=new Gson().fromJson(sharedPreferences.getString("dispatchdetailsBean",""),DispatchdetailsBean.class);
+                dispatchdetailsBean=getIntent().getParcelableExtra("dispatchdetailsBean");
+
             }else {
-                detailsBean=new Gson().fromJson(sharedPreferences.getString("detailsBean",""),DetailsBean.class);
+                detailsBean=getIntent().getParcelableExtra("detailsBean");
             }
 
 
@@ -715,9 +715,8 @@ public class ProductionwarehousingActivity extends BaseActivity {
     }
 
     private void checkSale() {
+
         for (int i = 0; i < dispatchdetailsBean.getData().size(); i++) {
-
-
            if (list.get(0).equals(dispatchdetailsBean.getData().get(i).getCinvcode()) &&
                     list.get(1).equals(dispatchdetailsBean.getData().get(i).getCbatch())) {
 
@@ -729,14 +728,13 @@ public class ProductionwarehousingActivity extends BaseActivity {
                    return;
                }
 
+               //是否超出
                if(dIncomplete<Double.parseDouble(arrivalHeadBean.getIquantity())){
+
                    overplus = Double.parseDouble(arrivalHeadBean.getIquantity())-dIncomplete;
+                   Toast.makeText(ProductionwarehousingActivity.this, "数量超出"+overplus, Toast.LENGTH_LONG).show();
                    dispatchdetailsBean.getData().get(i).setCompleted(dispatchdetailsBean.getData().get(i).getIquantity());
                    dispatchdetailsBean.getData().get(i).setIncomplete("0");
-
-                   if (!isPrint) {
-                       return;
-                   }
 
                } else {
 
@@ -747,6 +745,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
                }
                dispatchdetailsBean.getData().get(i).setCposition(cposition);
+               Log.i("put-->",new Gson().toJson(dispatchdetailsBean));
                sharedPreferences.edit().putString("detailsBean", new Gson().toJson(dispatchdetailsBean)).commit();
             }
 
@@ -792,6 +791,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                     detailsBean.getData().get(i).setIncomplete(dIncomplete+"");
 
                 }
+
                 sharedPreferences.edit().putString("detailsBean",new Gson().toJson(detailsBean)).commit();
 
             }

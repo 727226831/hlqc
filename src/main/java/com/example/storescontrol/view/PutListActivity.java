@@ -79,7 +79,7 @@ public class PutListActivity extends BaseActivity {
 
         }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
              data= sharedPreferences.getString("CreateCheckdetailslist","");
-            Log.i("data-->",data);
+            textViewtitle.setText("盘点明细");
         }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
              data= sharedPreferences.getString("CreateProductStoreInlist","");
 
@@ -260,7 +260,7 @@ public class PutListActivity extends BaseActivity {
                             arrivalHeadBeans.remove(i);
                             functionAdapter.notifyDataSetChanged();
                             textViewtotal.setText("总计:"+arrivalHeadBeans.size()+"条");
-                            //delete sharedPreferences->putlist item
+
                             String strings= new Gson().toJson(arrivalHeadBeans);
                              Log.i("list-->",strings);
                             if(getIntent().getStringExtra("menuname").equals("采购入库")) {

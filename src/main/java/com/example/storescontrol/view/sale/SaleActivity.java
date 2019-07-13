@@ -61,6 +61,7 @@ public class SaleActivity extends BaseActivity {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.show();
                createSaleOut();
             }
         });
@@ -69,6 +70,7 @@ public class SaleActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(SaleActivity.this,ProductionwarehousingActivity.class);
                 intent.putExtra("menuname",getIntent().getStringExtra("menuname"));
+                Log.i("put-->",new Gson().toJson(dispatchdetailsBean));
                 intent.putExtra("dispatchdetailsBean",dispatchdetailsBean);
                 startActivity(intent);
             }
@@ -90,6 +92,7 @@ public class SaleActivity extends BaseActivity {
             recyclerView.setLayoutManager(new LinearLayoutManager(SaleActivity.this));
             recyclerView.addItemDecoration(new DividerItemDecoration(SaleActivity.this,DividerItemDecoration.VERTICAL));
             recyclerView.setAdapter(functionAdapter);
+            functionAdapter.notifyDataSetChanged();
         }
     }
 
@@ -99,6 +102,7 @@ public class SaleActivity extends BaseActivity {
 
             if( Double.parseDouble(dispatchdetailsBean.getData().get(i).getIncomplete())!=0){
                 Toast.makeText(SaleActivity.this,"有未扫码条目，请完成后再提交",Toast.LENGTH_LONG).show();
+                dialog.dismiss();
                 return;
             }
 
@@ -123,7 +127,7 @@ public class SaleActivity extends BaseActivity {
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                dialog.dismiss();
                 try {
                     if(response.code()==200) {
                         Toast.makeText(SaleActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
@@ -177,7 +181,7 @@ public class SaleActivity extends BaseActivity {
                         recyclerView.addItemDecoration(new DividerItemDecoration(SaleActivity.this,DividerItemDecoration.VERTICAL));
                         recyclerView.setAdapter(functionAdapter);
 
-                        sharedPreferences.edit().putString("dispatchdetailsBean",new Gson().toJson(dispatchdetailsBean)).commit();
+                        sharedPreferences.edit().putString("detailsBean",new Gson().toJson(dispatchdetailsBean)).commit();
                         textViewTotal.setText("总计："+dispatchdetailsBean.getData().size()+"条");
                     }
                 } catch (Exception e) {

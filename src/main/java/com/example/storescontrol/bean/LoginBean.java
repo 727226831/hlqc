@@ -81,7 +81,7 @@ public class LoginBean {
     public List<User> getData() {
         return data;
     }
-    public class User {
+    public static class User {
 
         private String menucode;
         private String menuname;

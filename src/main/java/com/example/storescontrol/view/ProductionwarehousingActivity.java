@@ -731,11 +731,8 @@ public class ProductionwarehousingActivity extends BaseActivity {
                //是否超出
                if(dIncomplete<Double.parseDouble(arrivalHeadBean.getIquantity())){
 
-                   overplus = Double.parseDouble(arrivalHeadBean.getIquantity())-dIncomplete;
                    Toast.makeText(ProductionwarehousingActivity.this, "数量超出"+overplus, Toast.LENGTH_LONG).show();
-                   dispatchdetailsBean.getData().get(i).setCompleted(dispatchdetailsBean.getData().get(i).getIquantity());
-                   dispatchdetailsBean.getData().get(i).setIncomplete("0");
-
+                   return;
                } else {
 
                    dIncomplete = dIncomplete-(Double.parseDouble(arrivalHeadBean.getIquantity()));

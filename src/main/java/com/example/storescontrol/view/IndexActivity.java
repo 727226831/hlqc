@@ -38,6 +38,7 @@ public class IndexActivity extends BaseActivity {
         String data=sharedPreferences.getString("userinfo","");
         if(!data.equals("")){
             userinfoBean=new Gson().fromJson(data,LoginBean.class);
+
         }
 
         binding.setUser(userinfoBean);
@@ -76,30 +77,32 @@ public class IndexActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent();
-                    switch (i){
-                        case 0:
-                        case 1:
-                        case 6:
-                            intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
-                            break;
-                        case 2:
-                        case 3:
-                        case 5:
-                            intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
-                            break;
-                        case 4://销售出库
-                            intent  =new Intent(IndexActivity.this,DispatchActivity.class);
-                            break;
-                        case 8:
-                            intent  =new Intent(IndexActivity.this,StockcheckActivity.class);
-                            break;
-
-                        default:
-                            intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
-                            break;
+                    if(userinfoBean.getData().get(i).getMenuname().equals("采购入库")){
+                        intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("生产入库")){
+                        intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("调拨入库")){
+                        intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("材料出库")){
+                        intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("销售出库")){
+                        intent  =new Intent(IndexActivity.this,DispatchActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("调拨出库")){
+                        intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("货位调整")){
+                        intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("库存盘点")){
+                        intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("库存查询")){
+                        intent  =new Intent(IndexActivity.this,StockcheckActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("采购到货")){
+                        intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("完工填报")){
+                        intent  =new Intent(IndexActivity.this,ReportActivity.class);
                     }
                     intent.putExtra("menuname",userinfoBean.getData().get(i).getMenuname());
                     startActivity(intent);
+
                 }
             });
             Drawable drawableLeft = null;

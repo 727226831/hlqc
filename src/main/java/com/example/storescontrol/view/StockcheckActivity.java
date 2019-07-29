@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
@@ -73,7 +74,13 @@ public class StockcheckActivity extends BaseActivity {
 
                 try {
                     if(response.code()==200) {
-                        stockcheckBean=new Gson().fromJson(response.body().string(),StockcheckBean.class);
+
+                        stockcheckBean=new Gson().fromJson(response.body().string().toString(),StockcheckBean.class);
+                        if(stockcheckBean.getResultcode().equals("0")){
+                            binding.rvList.setAdapter(null);
+                            Toast.makeText(StockcheckActivity.this, stockcheckBean.getResultMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         functionAdapter=new FunctionAdapter(stockcheckBean.getData());
                         binding.rvList.setLayoutManager(new LinearLayoutManager(StockcheckActivity.this));
                         binding.rvList.addItemDecoration(new DividerItemDecoration(StockcheckActivity.this,DividerItemDecoration.VERTICAL));

@@ -152,11 +152,10 @@
                     android:gravity="center_vertical"
                     android:text="数量："
                     style="@style/textview" />
-                <TextView
+                <EditText
                     android:layout_toRightOf="@+id/tv_count"
-
-                    android:id="@+id/tv_number"
-                    style="@style/textview" />
+                    android:id="@+id/et_count"
+                    style="@style/edittext" />
                 <LinearLayout
                     android:visibility="gone"
                     android:layout_marginRight="20dp"

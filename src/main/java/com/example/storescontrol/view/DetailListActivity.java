@@ -111,8 +111,10 @@ public class DetailListActivity extends BaseActivity {
                 jsonObject.put("methodname","CheckTRInByccode");
             }else   if(getIntent().getStringExtra("menuname").equals("调拨出库")){
                 jsonObject.put("methodname","CheckTROutByccode");
-            } if(getIntent().getStringExtra("menuname").equals("材料出库")){
+            }else if(getIntent().getStringExtra("menuname").equals("材料出库")){
                 jsonObject.put("methodname","CheckMaterialOutByccode");
+            }else if(getIntent().getStringExtra("menuname").equals("生产入库")){
+                jsonObject.put("methodname","CheckProductStoreInByccode");
             }
             jsonObject.put("usercode",usercode);
             jsonObject.put("id",getIntent().getStringExtra("id"));
@@ -154,8 +156,10 @@ public class DetailListActivity extends BaseActivity {
                 jsonObject.put("methodname","getTRInDetailsByccode");
             }else   if(getIntent().getStringExtra("menuname").equals("调拨出库")){
                 jsonObject.put("methodname","getTROutDetailsByccode");
-            } if(getIntent().getStringExtra("menuname").equals("材料出库")){
+            }else if(getIntent().getStringExtra("menuname").equals("材料出库")){
                 jsonObject.put("methodname","getMaterialOutDetailsByccode");
+            }else if(getIntent().getStringExtra("menuname").equals("生产入库")){
+                jsonObject.put("methodname","getProductStoreInDetailsByccode");
             }
               jsonObject.put("usercode",usercode);
               jsonObject.put("id",getIntent().getStringExtra("id"));
@@ -224,6 +228,7 @@ public class DetailListActivity extends BaseActivity {
             vh.textViewiQuantity.setText("数量："+mDatas.get(i).getIQuantity());
             vh.textViewcompleted.setText("已扫码："+mDatas.get(i).getCompleted());
             vh.textViewincomplete.setText("未扫码："+ mDatas.get(i).getIncomplete());
+            vh.textViewcmocode.setText("生产订单号："+mDatas.get(i).getCmocode());
 
         }
 
@@ -234,7 +239,7 @@ public class DetailListActivity extends BaseActivity {
         class  VH extends RecyclerView.ViewHolder{
            TextView textViewcposition,textViewDetails,textViewiQuantity,textViewtag,
                    textViewcBatch,textViewcInvName,textViewcompleted,textViewincomplete,
-                   textViewCInvStd;
+                   textViewCInvStd,textViewcmocode;
             LinearLayout linearLayout;
             public VH(@NonNull View itemView) {
                 super(itemView);
@@ -248,6 +253,7 @@ public class DetailListActivity extends BaseActivity {
                textViewcompleted=itemView.findViewById(R.id.tv_completed);
                textViewincomplete=itemView.findViewById(R.id.tv_incomplete);
                textViewCInvStd=itemView.findViewById(R.id.tv_CInvStd);
+               textViewcmocode=itemView.findViewById(R.id.tv_cmocode);
             }
         }
     }

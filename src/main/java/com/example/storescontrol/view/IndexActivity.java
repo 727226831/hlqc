@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -77,10 +78,11 @@ public class IndexActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent();
+                    Log.i("select-->",userinfoBean.getData().get(i).getMenuname());
                     if(userinfoBean.getData().get(i).getMenuname().equals("采购入库")){
                         intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("生产入库")){
-                        intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
+                        intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("调拨入库")){
                         intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("材料出库")){

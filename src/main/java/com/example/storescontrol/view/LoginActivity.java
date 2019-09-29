@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Callback;
@@ -40,7 +42,8 @@ public class LoginActivity extends BaseActivity {
         titleTv=activityLoginBinding.getRoot().findViewById(R.id.tv_title);
         titleTv.setText("掌上管仓");
         SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
-
+        int randNumber = new Random().nextInt(2386-2000+1)+2000;
+        Log.i("randNumber",randNumber+"");
         activityLoginBinding.cbRemember.setChecked(sharedPreferences.getBoolean("isChecked",true));
         activityLoginBinding.etUsername.setText(sharedPreferences.getString("user",""));
 
@@ -87,6 +90,7 @@ public class LoginActivity extends BaseActivity {
                 Log.i("json object",obj);
                 SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
                 if(sharedPreferences.getString("port","").equals("")){
+                         Request.BASEURL=Request.wkf;
                          sharedPreferences.edit().putString("port",Request.BASEURL).commit();
                 }
                 Request.URL=sharedPreferences.getString("port","");

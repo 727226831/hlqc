@@ -60,7 +60,6 @@
                 <TextView
                     android:visibility="gone"
                     android:layout_weight="1"
-                    android:text="存货规格："
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_CInvStd"
@@ -110,6 +109,13 @@
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
+            <TextView
+
+                android:text="生产订单号："
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_cmocode"
+                style="@style/item_small"/>
 
 
 

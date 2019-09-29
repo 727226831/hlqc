@@ -45,6 +45,15 @@ public class DetailsBean implements Parcelable {
         private String cBatch;
         private String iQuantity;
 
+        public String getCmocode() {
+            return cmocode;
+        }
+
+        public void setCmocode(String cmocode) {
+            this.cmocode = cmocode;
+        }
+
+        private String cmocode;
         public String getCompleted() {
             return completed;
         }

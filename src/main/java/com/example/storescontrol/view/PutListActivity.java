@@ -247,13 +247,15 @@ public class PutListActivity extends BaseActivity {
                                stringscandata=sharedPreferences.getString("CreatePuStoreInscan","");
                             }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
                               stringscandata=sharedPreferences.getString("CreateCheckdetailsscan","");
+
                             }else  if(getIntent().getStringExtra("menuname").equals("生产入库")){
                                stringscandata=sharedPreferences.getString("CreateProductStoreInscan","");
                             }
 
                             List<String> listcode = new ArrayList<>(Arrays.asList(stringscandata));
+
                             for (int j = 0; j <listcode.size() ; j++) {
-                                if(listcode.get(j).contains(arrivalHeadBeans.get(i).getIrowno())){
+                                if(listcode.get(j).contains(arrivalHeadBeans.get(i).getcInvCode())){
                                     listcode.remove(j);
                                 }
                             }

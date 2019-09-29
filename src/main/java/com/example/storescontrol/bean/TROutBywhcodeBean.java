@@ -49,6 +49,16 @@ public class TROutBywhcodeBean {
         private String dDate;
         private String cWhCode;
         private String cWhName;
+
+        public String getCmocode() {
+            return cmocode;
+        }
+
+        public void setCmocode(String cmocode) {
+            this.cmocode = cmocode;
+        }
+
+        private String cmocode;
         public void setCTRCode(String cTRCode) {
             this.cTRCode = cTRCode;
         }

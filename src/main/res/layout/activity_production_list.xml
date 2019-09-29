@@ -11,7 +11,7 @@
 
     <android.support.v7.widget.RecyclerView
 
-        android:layout_above="@id/b_submit"
+
         android:layout_below="@id/l_title"
         android:id="@+id/rv_list"
         android:layout_width="match_parent"

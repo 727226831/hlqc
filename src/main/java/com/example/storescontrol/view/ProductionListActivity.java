@@ -66,6 +66,8 @@ public class ProductionListActivity extends BaseActivity {
                 jsonObject.put("methodname","getMaterialOutBywhcode");
             }else if(getIntent().getStringExtra("menuname").equals("销售出库")){
                 jsonObject.put("methodname","getDispatchBywhcode");
+            }else if(getIntent().getStringExtra("menuname").equals("生产入库")){
+                jsonObject.put("methodname","getProductStoreInBywhcode");
             }
             jsonObject.put("usercode",usercode);
             jsonObject.put("cwhcode","");
@@ -136,6 +138,7 @@ public class ProductionListActivity extends BaseActivity {
                      intent.putExtra("ccode",mDatas.get(i).getCCode());
                      intent.putExtra("menuname",getIntent().getStringExtra("menuname"));
                      intent.putExtra("ddate",mDatas.get(i).getdDate());
+
                     startActivity(intent);
 
                 }

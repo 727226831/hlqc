@@ -41,7 +41,7 @@ public class PortActivity extends BaseActivity{
                 SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
                 if(editText.getText().toString().equals("")){
                     Toast.makeText(PortActivity.this,"地址已重置为默认地址",Toast.LENGTH_LONG).show();
-                    editor.putString("port",Request.BASEURL);
+                    editor.putString("port",Request.wkf);
                     return;
                 }
                 if(Patterns.WEB_URL.matcher(editText.getText().toString()).matches()){

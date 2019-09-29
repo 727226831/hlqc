@@ -3,6 +3,7 @@ package com.example.storescontrol.Url;
 import android.app.Activity;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -82,6 +83,7 @@ public class Untils {
                     //|
                     numbers=code.replace("|",",");
                     break;
+
                 default:
                     numbers=code.replace("$",",");
                     break;
@@ -89,6 +91,7 @@ public class Untils {
 
             stringList = Arrays.asList(numbers.split(","));
         }
+        Log.i("parsecode-->",stringList.toString());
         return  stringList;
 
     }

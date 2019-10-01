@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivity {
        activityLoginBinding=DataBindingUtil.setContentView(this,R.layout.activity_login);
 
         titleTv=activityLoginBinding.getRoot().findViewById(R.id.tv_title);
-        titleTv.setText("掌上管仓");
+        titleTv.setText(getResources().getText(R.string.app_name));
         SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
         int randNumber = new Random().nextInt(2386-2000+1)+2000;
         Log.i("randNumber",randNumber+"");
@@ -107,7 +107,21 @@ public class LoginActivity extends BaseActivity {
                             dialog.dismiss();
                             switch (response.code()){
                                 case 200:
-                                    LoginBean resultBean=new Gson().fromJson(response.body().string(),LoginBean.class);
+                                    String result=response.body().string();
+//                                     result="{\n" +
+//                                            "\t\"Resultcode\": \"200\",\n" +
+//                                            "\t\"ResultMessage\": \"用户登陆成功\",\n" +
+//                                            "\t\"VersionNumber\": \"1.1.2\",\n" +
+//                                            "\t\"usercode\": \"demo\",\n" +
+//                                            "\t\"username\": \"demo\",\n" +
+//                                            "\t\"acccode\": \"001\",\n" +
+//                                            "\t\"accname\": \"灵动\",\n" +
+//                                            "\t\"data\": [{\n" +
+//                                            "\t\t\"menucode\": \"DSP\",\n" +
+//                                            "\t\t\"menuname\": \"待审批\"\n" +
+//                                            "\t}]\n" +
+//                                            "}";
+                                    LoginBean resultBean=new Gson().fromJson(result,LoginBean.class);
                                     if(resultBean.getResultcode().equals("200")) {
                                         SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器

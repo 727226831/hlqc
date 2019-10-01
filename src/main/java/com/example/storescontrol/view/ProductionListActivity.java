@@ -16,6 +16,7 @@ import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.Url.Untils;
 import com.example.storescontrol.bean.TROutBywhcodeBean;
+import com.example.storescontrol.view.task.TaskActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -37,12 +38,16 @@ public class ProductionListActivity extends BaseActivity {
     RecyclerView recyclerView;
     private FunctionAdapter functionAdapter;
     TROutBywhcodeBean trOutBywhcodeBean=new TROutBywhcodeBean();
+    private String menuname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View v=getLayoutInflater().inflate(R.layout.activity_production_list,null,false);
         setContentView(v);
-        Untils.initTitle(getIntent().getStringExtra("menuname"),this);
+        menuname=getIntent().getStringExtra("menuname");
+        Untils.initTitle(menuname,this);
+       // Untils.initTitle("待审批",this);
+        menuname="生产入库";
         recyclerView=findViewById(R.id.rv_list);
 
 
@@ -58,15 +63,15 @@ public class ProductionListActivity extends BaseActivity {
 
         JSONObject jsonObject=new JSONObject();
         try {
-            if(getIntent().getStringExtra("menuname").equals("调拨入库")){
+            if(menuname.equals("调拨入库")){
                 jsonObject.put("methodname","getTRInBywhcode");
-            }else   if(getIntent().getStringExtra("menuname").equals("调拨出库")){
+            }else   if(menuname.equals("调拨出库")){
                 jsonObject.put("methodname","getTROutBywhcode");
-            }else if(getIntent().getStringExtra("menuname").equals("材料出库")){
+            }else if(menuname.equals("材料出库")){
                 jsonObject.put("methodname","getMaterialOutBywhcode");
-            }else if(getIntent().getStringExtra("menuname").equals("销售出库")){
+            }else if(menuname.equals("销售出库")){
                 jsonObject.put("methodname","getDispatchBywhcode");
-            }else if(getIntent().getStringExtra("menuname").equals("生产入库")){
+            }else if(menuname.equals("生产入库")){
                 jsonObject.put("methodname","getProductStoreInBywhcode");
             }
             jsonObject.put("usercode",usercode);
@@ -87,8 +92,21 @@ public class ProductionListActivity extends BaseActivity {
 
                 try {
                     if(response.code()==200) {
-
-                        trOutBywhcodeBean=new Gson().fromJson(response.body().string(),TROutBywhcodeBean.class);
+                        String result=response.body().string();
+//                        result="{\n" +
+//                                "\t\"Resultcode\": \"200\",\n" +
+//                                "\t\"ResultMessage\": \"产成品入库单据取得成功\",\n" +
+//                                "\t\"data\": [{\n" +
+//                                "\t\t\"cTRCode\": \"QDMM201908085004\",\n" +
+//                                "\t\t\"cmocode\": \"MO20190808007\",\n" +
+//                                "\t\t\"ID\": \"1000004709\",\n" +
+//                                "\t\t\"cCode\": \"KS20190927013\",\n" +
+//                                "\t\t\"dDate\": \" 2019-08-08\",\n" +
+//                                "\t\t\"cWhCode\": \"08\",\n" +
+//                                "\t\t\"cWhName\": \"泉州市博源电子科技有限公司\"\n" +
+//                                "\t}]\n" +
+//                                "}";
+                        trOutBywhcodeBean=new Gson().fromJson(result,TROutBywhcodeBean.class);
                         functionAdapter=new FunctionAdapter(trOutBywhcodeBean.getData());
                         recyclerView.setLayoutManager(new LinearLayoutManager(ProductionListActivity.this));
                         recyclerView.addItemDecoration(new DividerItemDecoration(ProductionListActivity.this,DividerItemDecoration.VERTICAL));
@@ -127,6 +145,7 @@ public class ProductionListActivity extends BaseActivity {
             vh.textViewcwhname.setText(mDatas.get(i).getCWhName());
             vh.textViewdate.setText(mDatas.get(i).getdDate());
             vh.textViewcTRCode.setText(mDatas.get(i).getCTRCode());
+
             vh.textViewtag.setText(i+1+"");
 
 
@@ -138,8 +157,8 @@ public class ProductionListActivity extends BaseActivity {
                      intent.putExtra("ccode",mDatas.get(i).getCCode());
                      intent.putExtra("menuname",getIntent().getStringExtra("menuname"));
                      intent.putExtra("ddate",mDatas.get(i).getdDate());
-
                     startActivity(intent);
+//                    startActivity(new Intent(ProductionListActivity.this, TaskActivity.class));
 
                 }
             });

@@ -101,8 +101,11 @@ public class IndexActivity extends BaseActivity {
                         intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("完工填报")){
                         intent  =new Intent(IndexActivity.this,ReportActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("待审批")){
+                        intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
                     }
                     intent.putExtra("menuname",userinfoBean.getData().get(i).getMenuname());
+
                     startActivity(intent);
 
                 }
@@ -118,6 +121,8 @@ public class IndexActivity extends BaseActivity {
                 drawableLeft = IndexActivity.this.getResources().getDrawable(R.mipmap.ic_search);
             }else if(userinfoBean.getData().get(i).getMenuname().contains("调整")){
                 drawableLeft = IndexActivity.this.getResources().getDrawable(R.mipmap.ic_dbrk);
+            }else if(userinfoBean.getData().get(i).getMenuname().contains("待审批")){
+                drawableLeft = IndexActivity.this.getResources().getDrawable(R.mipmap.ic_inventory);
             }
             vh.funcationButton.setCompoundDrawablesWithIntrinsicBounds(null,
                     drawableLeft, null, null);

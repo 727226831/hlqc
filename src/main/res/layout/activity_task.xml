@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="bean"
+            type="com.example.storescontrol.bean.ArrivalHeadBean"/>
+
+
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/l_title"
+        layout="@layout/layout_title"/>
+        <RelativeLayout
+            android:id="@+id/rl_bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_centerVertical="true"
+                android:id="@+id/b_submit"
+                android:layout_margin="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@color/blue"
+                android:textColor="@android:color/white"
+                android:text="同意"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp" />
+            <Button
+                android:layout_toLeftOf="@id/b_submit"
+
+                android:id="@+id/b_search"
+                android:layout_margin="10dp"
+                android:layout_centerVertical="true"
+                android:background="@color/blue"
+                android:textColor="@android:color/white"
+                android:text="不同意"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp" />
+            <Button
+                android:layout_toLeftOf="@id/b_search"
+                android:id="@+id/b_exit"
+                android:layout_margin="10dp"
+                android:layout_centerVertical="true"
+                android:background="@color/blue"
+                android:textColor="@android:color/white"
+                android:text="撤回"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp" />
+            <TextView
+
+                android:id="@+id/tv_total"
+                style="@style/textview"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/font_normal"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                />
+        </RelativeLayout>
+    <ScrollView
+        android:layout_below="@id/l_title"
+        android:layout_above="@id/rl_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="报价单号：QDMM201908085004"
+                    style="@style/textview"
+                    />
+                <TextView
+                    android:id="@+id/tv_cinvcode"
+                    android:text="@{bean.cbatch}"
+                    style="@style/textview" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="备案客户：佛山市星光楼宇设备有限公司"
+                    style="@style/textview" />
+                <TextView
+                    android:id="@+id/tv_cInvName"
+                    android:text="@{bean.cInvName}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="应用领域：车用电子"
+                    style="@style/textview"/>
+                <TextView
+                    android:id="@+id/tv_cInvStd"
+                    android:text="@{bean.cInvStd}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_ccodekey"
+                    android:text="所属区域：华北"
+                    style="@style/textview" />
+                <TextView
+                    android:id="@+id/tv_ccode"
+                    android:text="@{bean.ccode}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/l_cvenabbname"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="应用描述：OBD车辆诊断器"
+                    style="@style/textview" />
+                <TextView
+                    android:id="@+id/tv_cvenabbname"
+                    android:text="@{bean.cvenabbname}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="产品类型：芯片"
+                    style="@style/textview" />
+
+            </LinearLayout>
+            <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="产品名称：空气净化器"
+                    style="@style/textview" />
+
+            </LinearLayout>
+            <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="灵动责任销：卢权胜"
+                    style="@style/textview" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_key"
+                    android:layout_gravity="center_vertical"
+                    style="@style/textview"
+                    android:text="是否MOQ："
+                    />
+                <RadioGroup
+                    android:id="@+id/rg_cposcode"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        android:id="@+id/rb_cposcode"
+                        android:checked="true"
+                        android:text="是"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <RadioButton
+                        android:text="否"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RadioGroup>
+
+
+            </LinearLayout>
+            <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="备注"
+                    style="@style/textview" />
+
+            </LinearLayout>
+            <EditText
+                android:layout_margin="10dp"
+                style="@style/edittext"
+              />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    </RelativeLayout>
+</layout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">hl掌上仓管</string>
+    <string name="app_name">掌上仓管</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->

@@ -619,10 +619,13 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
         if(!isCheck) {
             if (arrivalHeadBean.getCwhcode() == null) {
-                if(!getIntent().getStringExtra("menuname").equals("销售出库")){
-                    Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
-                    return;
+                if(Request.URL!=Request.wkf){
+                    if(!getIntent().getStringExtra("menuname").equals("销售出库")){
+                        Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                 }
+
 
             }
         }

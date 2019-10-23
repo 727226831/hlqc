@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.Random;
 
 import okhttp3.RequestBody;
@@ -34,6 +35,7 @@ import retrofit2.Retrofit;
 public class LoginActivity extends BaseActivity {
     TextView titleTv;
     ActivityLoginBinding activityLoginBinding;
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,15 @@ public class LoginActivity extends BaseActivity {
               }
           });
 
+         activityLoginBinding.cbType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+             @Override
+             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                 if(b){
+                     type=2;
+                 }
+             }
+         });
+
             activityLoginBinding.bSet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -77,96 +88,110 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.show();
-                JSONObject jsonObject=new JSONObject();
-                try {
-                    jsonObject.put("methodname","UserLogin");
-                    jsonObject.put("usercode",activityLoginBinding.etUsername.getText().toString());
-                    jsonObject.put("userpassword",activityLoginBinding.etPassword.getText().toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    login();
 
-                String obj=jsonObject.toString();
-                Log.i("json object",obj);
-                SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
-                if(sharedPreferences.getString("port","").equals("")){
-                         Request.BASEURL=Request.wkf;
-                         sharedPreferences.edit().putString("port",Request.BASEURL).commit();
-                }
-                Request.URL=sharedPreferences.getString("port","");
-                Log.i("url--->",Request.URL+"/Handler.ashx");
-                Retrofit retrofit=new Retrofit.Builder().baseUrl(Request.URL).build();
-                RequestBody body=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),obj);
-                iUrl login = retrofit.create(iUrl.class);
-                retrofit2.Call<ResponseBody> data = login.getMessage(body);
-                data.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                        try {
-                            dialog.dismiss();
-                            switch (response.code()){
-                                case 200:
-                                    String result=response.body().string();
-//                                     result="{\n" +
-//                                            "\t\"Resultcode\": \"200\",\n" +
-//                                            "\t\"ResultMessage\": \"用户登陆成功\",\n" +
-//                                            "\t\"VersionNumber\": \"1.1.2\",\n" +
-//                                            "\t\"usercode\": \"demo\",\n" +
-//                                            "\t\"username\": \"demo\",\n" +
-//                                            "\t\"acccode\": \"001\",\n" +
-//                                            "\t\"accname\": \"灵动\",\n" +
-//                                            "\t\"data\": [{\n" +
-//                                            "\t\t\"menucode\": \"DSP\",\n" +
-//                                            "\t\t\"menuname\": \"待审批\"\n" +
-//                                            "\t}]\n" +
-//                                            "}";
-                                    LoginBean resultBean=new Gson().fromJson(result,LoginBean.class);
-                                    if(resultBean.getResultcode().equals("200")) {
-                                        SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
-                                        editor.putString("usercode",resultBean.getUsercode());
-                                        editor.putString("user",activityLoginBinding.etUsername.getText().toString());
-                                        editor.putString("password",activityLoginBinding.etPassword.getText().toString()).commit();
-                                        editor.putBoolean("isChecked",activityLoginBinding.cbRemember.isChecked());
-                                        editor.putString("userinfo",new Gson().toJson(resultBean));
-                                        editor.commit();
-                                        if(!resultBean.getVersionNumber().equals(BuildConfig.VERSION_NAME)){
-                                            downloadByWeb(LoginActivity.this,Request.URL+"/upgrade/MMS_"+resultBean.getVersionNumber()+".apk");
-                                        }else {
-                                            acccode=resultBean.getAcccode();
-                                            usercode=resultBean.getUsercode();
-
-                                            startActivity(new Intent(LoginActivity.this,IndexActivity.class));
-                                            LoginActivity.this.finish();
-                                        }
-
-                                    }else {
-                                        Toast.makeText(LoginActivity.this,resultBean.getResultMessage(),Toast.LENGTH_LONG).show();
-                                    }
-                                    break;
-                                case 500:
-                                    Toast.makeText(LoginActivity.this,"服务器内部错误。",Toast.LENGTH_LONG).show();
-                                    break;
-                                case 404:
-                                    Toast.makeText(LoginActivity.this,"所请求的页面不存在或已被删除！",Toast.LENGTH_LONG).show();
-                                    break;
-
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    @Override
-                    public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-
-                    } });
             }
         });
 
+        sharedPreferences= getSharedPreferences("sp", Context.MODE_PRIVATE);
+        if(sharedPreferences.getString("port","").equals("")){
+//            Request.BASEURL=Request.URL_WKF;
+             Request.BASEURL=Request.URL_LD;
+//             Request.BASEURL=Request.URL_AR;
+            sharedPreferences.edit().putString("port",Request.BASEURL).commit();
+        }
+        Request.URL=sharedPreferences.getString("port","");
+        if(Request.URL.equals(Request.URL_LD)){
+            activityLoginBinding.cbType.setVisibility(View.VISIBLE);
+        }
+
 
     }
+
+
+
+    private void login() {
+
+
+
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("methodname","UserLogin");
+            jsonObject.put("usercode",activityLoginBinding.etUsername.getText().toString());
+            jsonObject.put("userpassword",activityLoginBinding.etPassword.getText().toString());
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String obj=jsonObject.toString();
+        Log.i("json object",obj);
+
+        Retrofit retrofit=new Retrofit.Builder().baseUrl(Request.URL).build();
+        RequestBody body=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),obj);
+        iUrl login = retrofit.create(iUrl.class);
+        retrofit2.Call<ResponseBody> data;
+        if(Request.URL.equals(Request.URL_LD)) {
+           data= login.login(body);
+        }else {
+            data= login.getMessage(body);
+        }
+        Log.i("url--->", data.request().url().toString());
+
+        data.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+                    dialog.dismiss();
+                    switch (response.code()){
+                        case 200:
+                            String result=response.body().string();
+
+                            LoginBean resultBean=new Gson().fromJson(result,LoginBean.class);
+                            if(resultBean.getResultcode().equals("200")) {
+                                SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
+                                editor.putString("usercode",resultBean.getUsercode());
+                                editor.putString("user",activityLoginBinding.etUsername.getText().toString());
+                                editor.putString("password",activityLoginBinding.etPassword.getText().toString()).commit();
+                                editor.putBoolean("isChecked",activityLoginBinding.cbRemember.isChecked());
+                                editor.putString("userinfo",new Gson().toJson(resultBean));
+                                editor.commit();
+                                if(!resultBean.getVersionNumber().equals(BuildConfig.VERSION_NAME)){
+                                    downloadByWeb(LoginActivity.this,Request.URL+"/upgrade/MMS_"+resultBean.getVersionNumber()+".apk");
+                                }else {
+                                    acccode=resultBean.getAcccode();
+                                    usercode=resultBean.getUsercode();
+
+                                    startActivity(new Intent(LoginActivity.this,IndexActivity.class));
+                                    LoginActivity.this.finish();
+                                }
+
+                            }else {
+                                Toast.makeText(LoginActivity.this,resultBean.getResultMessage(),Toast.LENGTH_LONG).show();
+                            }
+                            break;
+                        case 500:
+                            Toast.makeText(LoginActivity.this,"服务器内部错误。",Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Toast.makeText(LoginActivity.this,"所请求的页面不存在或已被删除！",Toast.LENGTH_LONG).show();
+                            break;
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+
+            } });
+    }
+
     private static void downloadByWeb(Context context, String apkPath) {
         Uri uri = Uri.parse(apkPath);
         //String android.intent.action.VIEW 比较通用，会根据用户的数据类型打开相应的Activity。如:浏览器,电话,播放器,地图

@@ -142,6 +142,7 @@ public class PutListActivity extends BaseActivity {
                 object.put("iquantity",arrivalHeadBeans.get(i).getIquantity().replace(arrivalHeadBeans.get(i).getcComUnitName(),""));
                 object.put("irowno",arrivalHeadBeans.get(i).getIrowno());
                 object.put("cposition",arrivalHeadBeans.get(i).getCposition());
+                object.put("cBoxNo",arrivalHeadBeans.get(i).getCboxno());
                 jsonArray.put(object);
             }
             jsonObject.put("datatetails",jsonArray);

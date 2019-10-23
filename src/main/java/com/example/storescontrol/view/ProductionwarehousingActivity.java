@@ -99,11 +99,29 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
         Untils.initTitle(getIntent().getStringExtra("menuname"),this);
 
+        if(Request.URL.equals(Request.URL_AR)){
+            binding.lCboxno.setVisibility(View.VISIBLE);
+
+        }
+
         sharedPreferences=getSharedPreferences("sp",MODE_PRIVATE);
-//        if(getIntent().getStringExtra("menuname").equals("生产入库")){
-//            binding.lCvenabbname.setVisibility(View.GONE);
-//            binding.rlUpdate.setVisibility(View.GONE);
-//        }else
+        if(getIntent().getStringExtra("menuname").equals("生产入库")){
+            if(Request.URL.equals(Request.URL_WKF)){
+                binding.lBatch.setVisibility(View.GONE);
+                binding.bSearch.setVisibility(View.GONE);
+                binding.tvTotal.setVisibility(View.GONE);
+                binding.rlUpdate.setVisibility(View.GONE);
+                detailsBean=getIntent().getParcelableExtra("detailsBean");
+                isCheck=true;
+                if(!Request.URL.equals(Request.URL_AR)){
+                    isPrint=true;
+                }
+
+            }else {
+                binding.lCvenabbname.setVisibility(View.GONE);
+                binding.rlUpdate.setVisibility(View.GONE);
+            }
+        }else
             if(getIntent().getStringExtra("menuname").equals("采购入库")){
             binding.rlUpdate.setVisibility(View.GONE);
         }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")||
@@ -135,16 +153,17 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
             isCheck=true;
             if(getIntent().getStringExtra("menuname").equals("材料出库")||
-                    getIntent().getStringExtra("menuname").equals("调拨出库")||
-                    getIntent().getStringExtra("menuname").equals("生产入库")){
-                isPrint=true;
+                    getIntent().getStringExtra("menuname").equals("调拨出库")){
+                if(!Request.URL.equals(Request.URL_AR)){
+                    isPrint=true;
+                }
             }
         }
 
         if(isCheck){
             binding.etBatch.requestFocus();
         }
-        if(Request.URL==Request.wkf){
+        if(Request.URL.equals(Request.URL_WKF)){
             sign="|";
             if(getIntent().getStringExtra("menuname").equals("调拨入库")||
                     getIntent().getStringExtra("menuname").equals("调拨出库")||
@@ -152,6 +171,17 @@ public class ProductionwarehousingActivity extends BaseActivity {
                autoAdd=false;
             }
         }
+        if(Request.URL.equals(Request.URL_AR)){
+            if(getIntent().getStringExtra("menuname").equals("调拨入库")||
+                    getIntent().getStringExtra("menuname").equals("调拨出库")||
+                    getIntent().getStringExtra("menuname").equals("库存盘点")||
+                    getIntent().getStringExtra("menuname").equals("销售出库")||
+                    getIntent().getStringExtra("menuname").equals("材料出库")
+            ){
+                autoAdd=false;
+            }
+        }
+
 
 
 
@@ -227,15 +257,22 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             stringScan=code;
                             binding.etBatch.setText(code);
 
-                            if(Request.URL.equals(Request.wkf)){
+                            if(Request.URL.equals(Request.URL_WKF)){
                                 list=Untils.parseCode(code,1);
                                 cinvcode=list.get(2);
                                 cbatch=list.get(4);
                                 getInventoryBycode(list.get(2));
+                            }else if(Request.URL.equals(Request.URL_AR)){
+                                list=Untils.parseCode(code,0);
+                                cinvcode=list.get(0);
+                                cbatch=list.get(1);
+                                getInventoryBycode(list.get(0));
                             }else {
                                 list=Untils.parseCode(code,0);
+                                Log.i("list size",list.size()+"");
                                 getInventoryBycode(list.get(0));
                             }
+
 
 
 
@@ -296,7 +333,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             arrivalHeadBean=gson.fromJson(data,ArrivalHeadBean.class);
                             binding.setBean(arrivalHeadBean);
 
-                            if(Request.URL==Request.wkf){
+                            if(Request.URL.equals(Request.URL_WKF)){
                                 ccode = list.get(2);
                                 getArrivalHeadBycode(ccode);
                                 if(list.size()>7) {
@@ -306,12 +343,14 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             }else {
                                 if(list.size()>3) {
                                     ccode = list.get(4);
-                                    getArrivalHeadBycode(ccode);
-                                    if(list.size()>7) {
-                                        binding.tvCvenbatch.setText("供应商批次：" + list.get(7));
-                                        arrivalHeadBean.setCvenbatch(list.get(7));
-                                    }
 
+                                    getArrivalHeadBycode(ccode);
+                                }
+
+
+                                if( !Request.URL.equals(Request.URL_AR) && list.size()>7) {
+                                    binding.tvCvenbatch.setText("供应商批次：" + list.get(7));
+                                    arrivalHeadBean.setCvenbatch(list.get(7));
                                 }
                             }
 
@@ -338,9 +377,13 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
         JSONObject jsonObject=new JSONObject();
         try {
+
             jsonObject.put("methodname","getArrivalHeadBycode");
             jsonObject.put("acccode",acccode);
             jsonObject.put("ccode",s);
+//            if(Request.URL.equals(Request.URL_AR)) {
+//                jsonObject.put("cVouchType", getIntent().getStringExtra("menuname"));
+//            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -359,14 +402,21 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             String data=jsonArray.getJSONObject(0).toString();
                             string2=data.substring(1,data.length()-1);
                             String string="{"+string1+string2+"}";
+                            Log.i("response-->",string);
                             arrivalHeadBean=gson.fromJson(string,ArrivalHeadBean.class);
-                            arrivalHeadBean.setMaterial(list.get(4));   //料号
-                            if(Request.URL==Request.wkf){
+                            if(Request.URL.equals(Request.URL_AR)){
+                                arrivalHeadBean.setMaterial(list.get(0));
+                                arrivalHeadBean.setCbatch(list.get(1));  //批号
+                                arrivalHeadBean.setIquantity(list.get(2));
+                               arrivalHeadBean.setCboxno(list.get(7));
+                            }else if(Request.URL.equals(Request.URL_WKF)){
                                 arrivalHeadBean.setCbatch(list.get(4));  //批号
                                 arrivalHeadBean.setIquantity(list.get(3));
+                                arrivalHeadBean.setMaterial(list.get(4));
                             }else {
                                 arrivalHeadBean.setCbatch(list.get(1));  //批号
                                 arrivalHeadBean.setIquantity(list.get(2));
+                                arrivalHeadBean.setMaterial(list.get(4));
                             }
                             arrivalHeadBean.setIrowno(list.get(5));
                             arrivalHeadBean.setImageid(imageid);
@@ -376,7 +426,11 @@ public class ProductionwarehousingActivity extends BaseActivity {
                                 arrivalHeadBean.setFile(file.getAbsolutePath());
                             }
                             binding.setBean(arrivalHeadBean);
-                            binding.etCount.setText(arrivalHeadBean.getIquantity()+arrivalHeadBean.getCComUnitName());
+                            if(arrivalHeadBean.getcComUnitName()!=null) {
+                                binding.etCount.setText(arrivalHeadBean.getIquantity() + arrivalHeadBean.getCComUnitName());
+                            }else {
+                                arrivalHeadBean.getIquantity();
+                            }
                             old=arrivalHeadBean.getIquantity();
 
 
@@ -384,9 +438,16 @@ public class ProductionwarehousingActivity extends BaseActivity {
                             if(getIntent().getStringExtra("menuname").equals("采购入库")) {
                                 Toast.makeText(ProductionwarehousingActivity.this, "未找到数据", Toast.LENGTH_SHORT).show();
                             }else {
-                                if(Request.URL==Request.wkf){
+                                if(Request.URL.equals(Request.URL_WKF)){
                                     arrivalHeadBean.setIquantity(list.get(3));
                                     arrivalHeadBean.setCbatch(list.get(4));
+                                }else  if(Request.URL.equals(Request.URL_AR)){
+                                    arrivalHeadBean.setMaterial(list.get(0));
+                                    arrivalHeadBean.setCbatch(list.get(1));  //批号
+                                    arrivalHeadBean.setIquantity(list.get(2));
+                                    arrivalHeadBean.setCboxno(list.get(7));
+                                    arrivalHeadBean.setCcode(list.get(4));
+                                    arrivalHeadBean.setIrowno(list.get(5));
                                 }else {
                                     arrivalHeadBean.setMaterial(list.get(0));   //料号
                                     arrivalHeadBean.setCbatch(list.get(1));  //批号
@@ -437,11 +498,16 @@ public class ProductionwarehousingActivity extends BaseActivity {
                         stringScan=binding.etBatch.getText().toString();
 
 
-                        if(Request.URL.equals(Request.wkf)){
+                        if(Request.URL.equals(Request.URL_WKF)){
                             list=Untils.parseCode( stringScan,1);
                             cinvcode=list.get(2);
                             cbatch=list.get(4);
                             getInventoryBycode(list.get(2));
+                        }else if(Request.URL.equals(Request.URL_AR)){
+                            list=Untils.parseCode(stringScan,0);
+                            cinvcode=list.get(0);
+                            cbatch=list.get(1);
+                            getInventoryBycode(list.get(0));
                         }else {
                             list=Untils.parseCode( stringScan,0);
                             getInventoryBycode(list.get(0));
@@ -619,7 +685,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
         if(!isCheck) {
             if (arrivalHeadBean.getCwhcode() == null) {
-                if(Request.URL!=Request.wkf){
+                if(Request.URL!=Request.URL_WKF){
                     if(!getIntent().getStringExtra("menuname").equals("销售出库")){
                         Toast.makeText(ProductionwarehousingActivity.this, "仓库不能为空", Toast.LENGTH_LONG).show();
                         return;
@@ -651,14 +717,20 @@ public class ProductionwarehousingActivity extends BaseActivity {
             stringscandata=sharedPreferences.getString("UpdatePositionTRscan","");
         }else  if(getIntent().getStringExtra("menuname").equals("采购到货")){
             stringscandata=sharedPreferences.getString("CreatePuArrivalInscan","");
+        }else  if(getIntent().getStringExtra("menuname").equals("销售出库")){
+            stringscandata=sharedPreferences.getString("CreatePuArrivalInscan","");
         }
 
 
-        if(stringscandata.contains(stringScan) ){
-            Toast.makeText(ProductionwarehousingActivity.this, "此二维码数据已添加", Toast.LENGTH_LONG).show();
-            binding.etBatch.setText("");
-            return;
-        }
+            if (stringscandata.contains(stringScan)) {
+                Log.i("scan", stringscandata + "/" + stringScan);
+                Toast.makeText(ProductionwarehousingActivity.this, "此二维码数据已添加", Toast.LENGTH_LONG).show();
+                binding.etBatch.setText("");
+                return;
+            }
+
+
+
 
 
 
@@ -669,10 +741,11 @@ public class ProductionwarehousingActivity extends BaseActivity {
         }
         arrivalHeadBean.setCposition(cposition);
 
-        arrivalHeadBean.setIquantity(binding.etCount.getText().toString().
-                replace(arrivalHeadBean.getCComUnitName(),""));
-        Log.i("Bean",binding.etCount.getText().toString().
-                replace(arrivalHeadBean.getCComUnitName(),""));
+        if(arrivalHeadBean.getcComUnitName()!=null) {
+            arrivalHeadBean.setIquantity(binding.etCount.getText().toString().
+                    replace(arrivalHeadBean.getCComUnitName(), ""));
+        }
+
         arrivalHeadBeans.add(arrivalHeadBean);
         String strings = new Gson().toJson(arrivalHeadBeans);
         if(isCheck){
@@ -708,9 +781,15 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
         initBatch();
         if(isCheck){
-            sharedPreferences.edit().putString("checkscan",listscan.toString()).commit();
 
             checkData();
+            if(isOverplus){
+                isOverplus=false;
+
+            }else {
+                sharedPreferences.edit().putString("checkscan",listscan.toString()).commit();
+            }
+
         }else    if(getIntent().getStringExtra("menuname").equals("采购入库")) {
             sharedPreferences.edit().putString("CreatePuStoreInscan",listscan.toString()).commit();
         }else  if(getIntent().getStringExtra("menuname").equals("库存盘点")) {
@@ -788,8 +867,9 @@ public class ProductionwarehousingActivity extends BaseActivity {
                }
 
                //是否超出
-               if(dIncomplete<Double.parseDouble(arrivalHeadBean.getIquantity())){
 
+               if(dIncomplete<Double.parseDouble(arrivalHeadBean.getIquantity())){
+                   isOverplus=true;
                    Toast.makeText(ProductionwarehousingActivity.this, "数量超出"+overplus, Toast.LENGTH_LONG).show();
                    return;
                } else {
@@ -809,7 +889,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
 
         }
     }
-
+   private  Boolean isOverplus=false;
     private void checkList() {
         for (int i = 0; i < detailsBean.getData().size(); i++) {
 

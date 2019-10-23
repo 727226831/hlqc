@@ -46,8 +46,7 @@ public class ProductionListActivity extends BaseActivity {
         setContentView(v);
         menuname=getIntent().getStringExtra("menuname");
         Untils.initTitle(menuname,this);
-       // Untils.initTitle("待审批",this);
-        menuname="生产入库";
+
         recyclerView=findViewById(R.id.rv_list);
 
 
@@ -93,19 +92,7 @@ public class ProductionListActivity extends BaseActivity {
                 try {
                     if(response.code()==200) {
                         String result=response.body().string();
-//                        result="{\n" +
-//                                "\t\"Resultcode\": \"200\",\n" +
-//                                "\t\"ResultMessage\": \"产成品入库单据取得成功\",\n" +
-//                                "\t\"data\": [{\n" +
-//                                "\t\t\"cTRCode\": \"QDMM201908085004\",\n" +
-//                                "\t\t\"cmocode\": \"MO20190808007\",\n" +
-//                                "\t\t\"ID\": \"1000004709\",\n" +
-//                                "\t\t\"cCode\": \"KS20190927013\",\n" +
-//                                "\t\t\"dDate\": \" 2019-08-08\",\n" +
-//                                "\t\t\"cWhCode\": \"08\",\n" +
-//                                "\t\t\"cWhName\": \"泉州市博源电子科技有限公司\"\n" +
-//                                "\t}]\n" +
-//                                "}";
+
                         trOutBywhcodeBean=new Gson().fromJson(result,TROutBywhcodeBean.class);
                         functionAdapter=new FunctionAdapter(trOutBywhcodeBean.getData());
                         recyclerView.setLayoutManager(new LinearLayoutManager(ProductionListActivity.this));

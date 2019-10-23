@@ -4,7 +4,7 @@
     <data>
         <variable
             name="bean"
-            type="com.example.storescontrol.bean.ArrivalHeadBean"/>
+            type="com.example.storescontrol.bean.TaskBean.Data"/>
 
 
     </data>
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
             <Button
                 android:layout_centerVertical="true"
-                android:id="@+id/b_submit"
+                android:id="@+id/b_agree"
                 android:layout_margin="10dp"
                 android:layout_alignParentRight="true"
                 android:background="@color/blue"
@@ -31,9 +31,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp" />
             <Button
-                android:layout_toLeftOf="@id/b_submit"
+                android:layout_toLeftOf="@id/b_agree"
 
-                android:id="@+id/b_search"
+                android:id="@+id/b_disagree"
                 android:layout_margin="10dp"
                 android:layout_centerVertical="true"
                 android:background="@color/blue"
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp" />
             <Button
-                android:layout_toLeftOf="@id/b_search"
+                android:layout_toLeftOf="@id/b_disagree"
                 android:id="@+id/b_exit"
                 android:layout_margin="10dp"
                 android:layout_centerVertical="true"
@@ -81,12 +81,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="报价单号：QDMM201908085004"
+                    android:text="报价单号："
                     style="@style/textview"
                     />
                 <TextView
                     android:id="@+id/tv_cinvcode"
-                    android:text="@{bean.cbatch}"
+                    android:text="@{bean.s_QuotationID}"
                     style="@style/textview" />
             </LinearLayout>
 
@@ -95,11 +95,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="备案客户：佛山市星光楼宇设备有限公司"
+                    android:text="备案客户："
                     style="@style/textview" />
                 <TextView
                     android:id="@+id/tv_cInvName"
-                    android:text="@{bean.cInvName}"
+                    android:text="@{bean.r_RecordCompany}"
                     style="@style/textview" />
             </LinearLayout>
             <LinearLayout
@@ -107,11 +107,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="应用领域：车用电子"
+                    android:text="应用领域："
                     style="@style/textview"/>
                 <TextView
                     android:id="@+id/tv_cInvStd"
-                    android:text="@{bean.cInvStd}"
+                    android:text="@{bean.s_ApplicationArea}"
                     style="@style/textview" />
             </LinearLayout>
             <LinearLayout
@@ -120,11 +120,11 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tv_ccodekey"
-                    android:text="所属区域：华北"
+                    android:text="所属区域："
                     style="@style/textview" />
                 <TextView
                     android:id="@+id/tv_ccode"
-                    android:text="@{bean.ccode}"
+                    android:text="@{bean.S_Region}"
                     style="@style/textview" />
             </LinearLayout>
             <LinearLayout
@@ -133,11 +133,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="应用描述：OBD车辆诊断器"
+                    android:text="应用描述："
                     style="@style/textview" />
                 <TextView
                     android:id="@+id/tv_cvenabbname"
-                    android:text="@{bean.cvenabbname}"
+                    android:text="@{bean.S_ApplicationProject}"
                     style="@style/textview" />
             </LinearLayout>
             <LinearLayout
@@ -146,9 +146,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="产品类型：芯片"
+                    android:text="产品类型："
                     style="@style/textview" />
-
+                <TextView
+                    android:text="@{bean.S_InvType}"
+                    style="@style/textview" />
             </LinearLayout>
             <LinearLayout
 
@@ -156,9 +158,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="产品名称：空气净化器"
+                    android:text="产品名称："
                     style="@style/textview" />
-
+                <TextView
+                    android:text="@{bean.S_ProjectName}"
+                    style="@style/textview" />
             </LinearLayout>
             <LinearLayout
 
@@ -166,9 +170,127 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="灵动责任销：卢权胜"
+                    android:text="灵动责任销售："
                     style="@style/textview" />
+                <TextView
 
+                    android:text="@{bean.s_Verifyer}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+
+                    android:text="产品型号："
+                    style="@style/textview" />
+                <TextView
+
+                    android:text="@{bean.s_InvName}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+
+                    android:text="内核版本号："
+                    style="@style/textview" />
+                <TextView
+
+                    android:text="@{bean.s_InvVersion}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+
+                    android:text="客户预计年费用："
+                    style="@style/textview" />
+                <TextView
+
+                    android:text="@{bean.S_UseQty}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+
+                    android:text="最低起订量（颗）："
+                    style="@style/textview" />
+                <TextView
+
+                    android:text="@{bean.S_Qty}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+
+                    android:text="单价："
+                    style="@style/textview" />
+                <TextView
+
+                    android:text="@{bean.S_Price}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+
+                    android:text="总金额："
+                    style="@style/textview" />
+                <TextView
+
+                    android:text="@{bean.S_Sum}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+
+                    android:text="包装形式："
+                    style="@style/textview" />
+                <TextView
+
+                    android:text="@{bean.S_Package}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+
+                    android:text="交货地："
+                    style="@style/textview" />
+                <TextView
+
+                    android:text="@{bean.S_Address}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="提交时间："
+                    style="@style/textview" />
+                <TextView
+                    android:text="@{bean.s_RegisterDate}"
+                    style="@style/textview" />
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
@@ -212,9 +334,11 @@
 
             </LinearLayout>
             <EditText
+                android:id="@+id/et_P_AuditMemo"
                 android:layout_margin="10dp"
                 style="@style/edittext"
               />
+
 
         </LinearLayout>
 

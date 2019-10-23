@@ -16,10 +16,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.storescontrol.R;
+import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.bean.LoginBean;
 import com.example.storescontrol.databinding.ActivityIndexBinding;
 import com.example.storescontrol.view.declaration.ReportActivity;
 import com.example.storescontrol.view.sale.DispatchActivity;
+import com.example.storescontrol.view.task.TaskListActivity;
 import com.google.gson.Gson;
 
 public class IndexActivity extends BaseActivity {
@@ -39,7 +41,7 @@ public class IndexActivity extends BaseActivity {
         String data=sharedPreferences.getString("userinfo","");
         if(!data.equals("")){
             userinfoBean=new Gson().fromJson(data,LoginBean.class);
-
+           Log.i("menu-->",new Gson().toJson(userinfoBean));
         }
 
         binding.setUser(userinfoBean);
@@ -82,7 +84,11 @@ public class IndexActivity extends BaseActivity {
                     if(userinfoBean.getData().get(i).getMenuname().equals("采购入库")){
                         intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("生产入库")){
-                        intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
+                        if(Request.URL.equals(Request.URL_AR)){
+                            intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
+                        }else {
+                            intent = new Intent(IndexActivity.this, ProductionListActivity.class);
+                        }
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("调拨入库")){
                         intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("材料出库")){
@@ -101,8 +107,8 @@ public class IndexActivity extends BaseActivity {
                         intent  =new Intent(IndexActivity.this,ProductionwarehousingActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("完工填报")){
                         intent  =new Intent(IndexActivity.this,ReportActivity.class);
-                    }else if(userinfoBean.getData().get(i).getMenuname().equals("待审批")){
-                        intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("待审批任务")){
+                        intent  =new Intent(IndexActivity.this, TaskListActivity.class);
                     }
                     intent.putExtra("menuname",userinfoBean.getData().get(i).getMenuname());
 

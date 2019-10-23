@@ -20,6 +20,8 @@ import com.example.storescontrol.bean.DetailsBean;
 public class BaseActivity extends AppCompatActivity {
     public static   String acccode,usercode;
     public  AlertDialog dialog;
+    //type 1客户 2供应商
+    public static  int type=1;
 
 
 

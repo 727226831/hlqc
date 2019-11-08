@@ -4,18 +4,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.storescontrol.R;
 import com.example.storescontrol.Url.Request;
@@ -25,12 +32,15 @@ import com.example.storescontrol.bean.TROutBywhcodeBean;
 import com.example.storescontrol.bean.TaskBean;
 import com.example.storescontrol.view.BaseActivity;
 import com.example.storescontrol.view.DetailListActivity;
+import com.example.storescontrol.view.LoginActivity;
 import com.example.storescontrol.view.ProductionListActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -45,20 +55,72 @@ import retrofit2.Retrofit;
 public class TaskListActivity extends BaseActivity {
     RecyclerView recyclerView;
     private FunctionAdapter functionAdapter;
-
+    private EditText editTextSearch;
     private String menuname;
     SharedPreferences sharedPreferences;
-
+    TabLayout tabLayout;
+    int listType=0;
+    TaskBean taskBean= null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View v=getLayoutInflater().inflate(R.layout.activity_production_list,null,false);
         setContentView(v);
+
+        tabLayout=findViewById(R.id.tl_title);
+        editTextSearch=findViewById(R.id.et_search);
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                List<TaskBean.Data> data=new ArrayList<>();
+                Log.i("onTextChanged->",charSequence.toString());
+                for (int j = 0; j <taskBean.getData().size() ; j++) {
+                    String bean=new Gson().toJson(taskBean.getData().get(j));
+                    if(bean.contains(charSequence
+                    )){
+                        data.add(taskBean.getData().get(j));
+                    }
+                }
+                initAdapter(data);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                getData(tab.getPosition());
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         menuname=getIntent().getStringExtra("menuname");
         Untils.initTitle(menuname,this);
 
         recyclerView=findViewById(R.id.rv_list);
-        sharedPreferences=getSharedPreferences(usercode,0);
+
+
+        sharedPreferences=getSharedPreferences(acccode+"",0);
 
 
     }
@@ -66,12 +128,24 @@ public class TaskListActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        getData();
+       getData(listType);
     }
 
-    private void getData() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void getData(final int type) {
+         listType=type;
 
         JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("acccode",acccode);
+            jsonObject.put("type",type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         String obj=jsonObject.toString();
         Log.i("json object",obj);
 
@@ -88,27 +162,41 @@ public class TaskListActivity extends BaseActivity {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                try {
-                    if(response.code()==200) {
-                        String result=response.body().string();
-                        TaskBean taskBean=new Gson().fromJson(result,TaskBean.class);
-                        functionAdapter=new FunctionAdapter(taskBean.getData());
-                        recyclerView.setLayoutManager(new LinearLayoutManager(TaskListActivity.this));
-                        recyclerView.addItemDecoration(new DividerItemDecoration(TaskListActivity.this,DividerItemDecoration.VERTICAL));
-                        recyclerView.setAdapter(functionAdapter);
 
+                    if(response.code()==200) {
+
+                        try {
+                            taskBean = new Gson().fromJson(response.body().string(), TaskBean.class);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(type==0){
+                            tabLayout.getTabAt(0).setText("待审批("+taskBean.getData().size()+")");
+                        }else if(type==1) {
+                            tabLayout.getTabAt(1).setText("已审批("+taskBean.getData().size()+")");
+                        }
+                        initAdapter(taskBean.getData());
 
 
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+
             }
             @Override
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
 
             } });
     }
+
+    private void initAdapter(List<TaskBean.Data> data) {
+        functionAdapter = new FunctionAdapter(data);
+        recyclerView.setLayoutManager(new LinearLayoutManager(TaskListActivity.this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(TaskListActivity.this, DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(functionAdapter);
+        functionAdapter.notifyDataSetChanged();
+    }
+
     class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.VH>{
 
         @NonNull
@@ -137,6 +225,8 @@ public class TaskListActivity extends BaseActivity {
             vh.textViewS_InvName.setText("型号："+mDatas.get(i).getS_InvName());
             vh.textViewR_RecordCompany.setText("客户："+mDatas.get(i).getR_RecordCompany());
             vh.textViewS_Verifyer.setText("销售："+mDatas.get(i).getS_Verifyer());
+            vh.textViewM_MSN.setText("供应商："+mDatas.get(i).getM_MSN());
+
 
             if(sharedPreferences.getBoolean(mDatas.get(i).getS_QuotationID(),false)){
                 vh.imageViewTag.setVisibility(View.GONE);
@@ -153,9 +243,15 @@ public class TaskListActivity extends BaseActivity {
                 public void onClick(View v) {
                     sharedPreferences.edit().putBoolean(mDatas.get(i).getS_QuotationID(),true).commit();
                     vh.imageViewTag.setVisibility(View.GONE);
+
                     if(type==1) {
                         Intent intent = new Intent(TaskListActivity.this, TaskActivity.class);
                         intent.putExtra("taskBean", mDatas.get(i));
+                        if(acccode.equals("15")){
+                            intent.putExtra("type",-1);
+                        }else {
+                            intent.putExtra("type",listType);
+                        }
 
                         startActivity(intent);
                     }
@@ -174,7 +270,8 @@ public class TaskListActivity extends BaseActivity {
         }
         class  VH extends RecyclerView.ViewHolder{
             TextView textViewtag,textViewS_QuotationID,textViewR_RecordCompany, textViewS_InvName,
-                    textViewS_InvVersion,textViewS_Verifyer,textViewS_State,textViewS_RegisterDate;
+                    textViewS_InvVersion,textViewS_Verifyer,textViewS_State,textViewS_RegisterDate,
+                    textViewM_MSN;
             LinearLayout linearLayout;
             ImageView imageViewTag;
 
@@ -190,6 +287,7 @@ public class TaskListActivity extends BaseActivity {
                textViewS_State=itemView.findViewById(R.id.tv_S_State);
                textViewS_RegisterDate=itemView.findViewById(R.id.tv_S_RegisterDate);
                imageViewTag=itemView.findViewById(R.id.iv_tag);
+               textViewM_MSN=itemView.findViewById(R.id.tv_M_MSN);
 
 
 

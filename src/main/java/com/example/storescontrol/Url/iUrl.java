@@ -28,5 +28,7 @@ public interface iUrl {
 
     @POST("/taskApproval")
     Call<ResponseBody> taskApproval(@Body RequestBody info);   // 请求体RequestBody 类型
+    @POST("/updateMoq")
+    Call<ResponseBody> updateMoq(@Body RequestBody info);
 
 }

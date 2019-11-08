@@ -18,7 +18,10 @@ import com.example.storescontrol.Url.Request;
 import com.example.storescontrol.bean.LoginBean;
 import com.example.storescontrol.Url.iUrl;
 import com.example.storescontrol.databinding.ActivityLoginBinding;
+import com.example.storescontrol.service.DemoIntentService;
+import com.example.storescontrol.service.DemoPushService;
 import com.google.gson.Gson;
+import com.igexin.sdk.PushManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +38,7 @@ import retrofit2.Retrofit;
 public class LoginActivity extends BaseActivity {
     TextView titleTv;
     ActivityLoginBinding activityLoginBinding;
-    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +47,7 @@ public class LoginActivity extends BaseActivity {
         titleTv=activityLoginBinding.getRoot().findViewById(R.id.tv_title);
         titleTv.setText(getResources().getText(R.string.app_name));
         SharedPreferences sharedPreferences = getSharedPreferences("sp", Context.MODE_PRIVATE);
-        int randNumber = new Random().nextInt(2386-2000+1)+2000;
-        Log.i("randNumber",randNumber+"");
+
         activityLoginBinding.cbRemember.setChecked(sharedPreferences.getBoolean("isChecked",true));
         activityLoginBinding.etUsername.setText(sharedPreferences.getString("user",""));
 
@@ -144,6 +146,7 @@ public class LoginActivity extends BaseActivity {
             public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 try {
+
                     dialog.dismiss();
                     switch (response.code()){
                         case 200:
@@ -159,11 +162,14 @@ public class LoginActivity extends BaseActivity {
                                 editor.putBoolean("isChecked",activityLoginBinding.cbRemember.isChecked());
                                 editor.putString("userinfo",new Gson().toJson(resultBean));
                                 editor.commit();
+
+                                PushManager.getInstance().bindAlias(LoginActivity.this,resultBean.getAcccode(),"alias");
                                 if(!resultBean.getVersionNumber().equals(BuildConfig.VERSION_NAME)){
                                     downloadByWeb(LoginActivity.this,Request.URL+"/upgrade/MMS_"+resultBean.getVersionNumber()+".apk");
                                 }else {
                                     acccode=resultBean.getAcccode();
                                     usercode=resultBean.getUsercode();
+
 
                                     startActivity(new Intent(LoginActivity.this,IndexActivity.class));
                                     LoginActivity.this.finish();

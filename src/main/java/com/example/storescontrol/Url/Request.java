@@ -18,8 +18,8 @@ public class Request {
    // public  static String BASEURL="http://192.168.1.85:8881";
     public static  String URL_WKF ="http://wkf.vaiwan.com";
     public static  String URL_AR="http://ar_wms.vaiwan.com";
- //   public static  String URL_LD="http://47.103.60.28:3000";
-    public static  String URL_LD="http://192.168.0.101:3000";
+    public static  String URL_LD="http://47.103.60.28:3000";
+  //  public static  String URL_LD="http://192.168.43.168:3000";
 
     public  static String URL;
     public static Call<ResponseBody> getRequestbody(String obj) {

@@ -9,22 +9,27 @@ import java.util.List;
 public class TaskBean implements Parcelable {
 
 
-        private String code;
-        private String message;
-        private List<Data> data;
-        public void setCode(String code) {
-            this.code = code;
-        }
-        public String getCode() {
-            return code;
-        }
+        private String Resultcode;
 
-        public void setMessage(String message) {
-            this.message = message;
-        }
-        public String getMessage() {
-            return message;
-        }
+    public String getResultcode() {
+        return Resultcode;
+    }
+
+    public void setResultcode(String resultcode) {
+        Resultcode = resultcode;
+    }
+
+    public String getResultMessage() {
+        return ResultMessage;
+    }
+
+    public void setResultMessage(String resultMessage) {
+        ResultMessage = resultMessage;
+    }
+
+    private String ResultMessage;
+        private List<Data> data;
+
 
         public void setData(List<Data> data) {
             this.data = data;
@@ -50,7 +55,35 @@ public class TaskBean implements Parcelable {
         private String S_ProjectName;
         private String S_UseQty;
         private String S_Qty;
+        private String p_id;
 
+        public String getM_MSN() {
+            return M_MSN;
+        }
+
+        public void setM_MSN(String m_MSN) {
+            M_MSN = m_MSN;
+        }
+
+        private String M_MSN;
+
+        public String getP_id() {
+            return p_id;
+        }
+
+        public void setP_id(String p_id) {
+            this.p_id = p_id;
+        }
+
+        public String getP_RowNo() {
+            return P_RowNo;
+        }
+
+        public void setP_RowNo(String p_RowNo) {
+            P_RowNo = p_RowNo;
+        }
+
+        private String P_RowNo;
 
         public String getS_Id() {
             return S_Id;
@@ -171,16 +204,10 @@ public class TaskBean implements Parcelable {
             P_AuditMemo = p_AuditMemo;
         }
 
-        public String getP_Id() {
-            return P_Id;
-        }
 
-        public void setP_Id(String p_Id) {
-            P_Id = p_Id;
-        }
 
         private String P_AuditMemo;
-        private String P_Id="";
+
 
         public String getS_RegisterDate() {
             return S_RegisterDate;
@@ -266,13 +293,15 @@ public class TaskBean implements Parcelable {
             dest.writeString(this.S_ProjectName);
             dest.writeString(this.S_UseQty);
             dest.writeString(this.S_Qty);
+            dest.writeString(this.p_id);
+            dest.writeString(this.M_MSN);
+            dest.writeString(this.P_RowNo);
             dest.writeString(this.S_Id);
             dest.writeString(this.S_Price);
             dest.writeString(this.S_Sum);
             dest.writeString(this.S_Package);
             dest.writeString(this.S_Address);
             dest.writeString(this.P_AuditMemo);
-            dest.writeString(this.P_Id);
             dest.writeString(this.S_RegisterDate);
         }
 
@@ -292,13 +321,15 @@ public class TaskBean implements Parcelable {
             this.S_ProjectName = in.readString();
             this.S_UseQty = in.readString();
             this.S_Qty = in.readString();
+            this.p_id = in.readString();
+            this.M_MSN = in.readString();
+            this.P_RowNo = in.readString();
             this.S_Id = in.readString();
             this.S_Price = in.readString();
             this.S_Sum = in.readString();
             this.S_Package = in.readString();
             this.S_Address = in.readString();
             this.P_AuditMemo = in.readString();
-            this.P_Id = in.readString();
             this.S_RegisterDate = in.readString();
         }
 
@@ -315,6 +346,9 @@ public class TaskBean implements Parcelable {
         };
     }
 
+    public TaskBean() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -322,22 +356,18 @@ public class TaskBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.code);
-        dest.writeString(this.message);
-        dest.writeList(this.data);
-    }
-
-    public TaskBean() {
+        dest.writeString(this.Resultcode);
+        dest.writeString(this.ResultMessage);
+        dest.writeTypedList(this.data);
     }
 
     protected TaskBean(Parcel in) {
-        this.code = in.readString();
-        this.message = in.readString();
-        this.data = new ArrayList<Data>();
-        in.readList(this.data, Data.class.getClassLoader());
+        this.Resultcode = in.readString();
+        this.ResultMessage = in.readString();
+        this.data = in.createTypedArrayList(Data.CREATOR);
     }
 
-    public static final Parcelable.Creator<TaskBean> CREATOR = new Parcelable.Creator<TaskBean>() {
+    public static final Creator<TaskBean> CREATOR = new Creator<TaskBean>() {
         @Override
         public TaskBean createFromParcel(Parcel source) {
             return new TaskBean(source);

@@ -144,6 +144,7 @@ public class ProductionListActivity extends BaseActivity {
                      intent.putExtra("ccode",mDatas.get(i).getCCode());
                      intent.putExtra("menuname",getIntent().getStringExtra("menuname"));
                      intent.putExtra("ddate",mDatas.get(i).getdDate());
+                     intent.putExtra("cWhCode",mDatas.get(i).getCWhCode());
                     startActivity(intent);
 //                    startActivity(new Intent(ProductionListActivity.this, TaskActivity.class));
 

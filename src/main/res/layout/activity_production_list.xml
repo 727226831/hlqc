@@ -1,47 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".view.PutListActivity">
     <include
         android:id="@+id/l_title"
         layout="@layout/layout_title"/>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tl_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/ti_unfinished"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="待审批"/>
-        <android.support.design.widget.TabItem
-            android:id="@+id/ti_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="已审批"/>
-
-    </android.support.design.widget.TabLayout>
-
-  <EditText
-      android:singleLine="true"
-      android:hint="请输入搜索内容"
-      android:id="@+id/et_search"
-      android:layout_width="match_parent"
-      android:layout_height="50dp"/>
-
     <android.support.v7.widget.RecyclerView
 
+
+        android:layout_below="@id/l_title"
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
-</LinearLayout>
+</RelativeLayout>

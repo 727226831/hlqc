@@ -53,6 +53,16 @@ public class ArrivalHeadBean implements Parcelable {
     private  String cbatch;
     private  String iquantity;
 
+    public String getIcurqty() {
+        return icurqty;
+    }
+
+    public void setIcurqty(String icurqty) {
+        this.icurqty = icurqty;
+    }
+
+    private String icurqty;
+
 
     public String getCboxno() {
         return cboxno;
@@ -475,6 +485,7 @@ public class ArrivalHeadBean implements Parcelable {
         dest.writeString(this.material);
         dest.writeString(this.cbatch);
         dest.writeString(this.iquantity);
+        dest.writeString(this.icurqty);
         dest.writeString(this.cboxno);
         dest.writeString(this.cdefine10);
         dest.writeString(this.cvenbatch);
@@ -515,6 +526,7 @@ public class ArrivalHeadBean implements Parcelable {
         this.material = in.readString();
         this.cbatch = in.readString();
         this.iquantity = in.readString();
+        this.icurqty = in.readString();
         this.cboxno = in.readString();
         this.cdefine10 = in.readString();
         this.cvenbatch = in.readString();

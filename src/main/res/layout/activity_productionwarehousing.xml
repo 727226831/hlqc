@@ -217,6 +217,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:text="可用量："
+                    style="@style/textview" />
+                <TextView
+                    android:text="@{bean.icurqty}"
+                    style="@style/textview" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
                     android:text="规格型号："
                     style="@style/textview"/>
                 <TextView

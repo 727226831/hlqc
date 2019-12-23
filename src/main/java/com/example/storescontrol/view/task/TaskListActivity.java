@@ -67,8 +67,8 @@ public class TaskListActivity extends BaseActivity {
         View v=getLayoutInflater().inflate(R.layout.activity_production_list,null,false);
         setContentView(v);
 
-        tabLayout=findViewById(R.id.tl_title);
-        editTextSearch=findViewById(R.id.et_search);
+//        tabLayout=findViewById(R.id.tl_title);
+//        editTextSearch=findViewById(R.id.et_search);
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

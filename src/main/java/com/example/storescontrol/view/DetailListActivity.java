@@ -70,6 +70,7 @@ public class DetailListActivity extends BaseActivity {
 
                 Intent intent=new Intent(DetailListActivity.this,ProductionwarehousingActivity.class);
                 intent.putExtra("menuname",getIntent().getStringExtra("menuname"));
+                intent.putExtra("cWhCode",getIntent().getStringExtra("cWhCode"));
                 intent.putExtra("detailsBean",detailsBean);
                 startActivity(intent);
             }

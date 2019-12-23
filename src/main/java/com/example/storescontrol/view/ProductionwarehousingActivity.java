@@ -65,7 +65,7 @@ public class ProductionwarehousingActivity extends BaseActivity {
     int tag=-1;//0仓库 1料号
     Gson gson=new Gson();
     private  String old="1";
-    private  String cwhcode,cposition,updatecposition;
+    private  String cwhcode="",cposition,updatecposition;
     private  String imageid="";
     Uri photoUri;
     int imageresultcode=100;
@@ -102,6 +102,9 @@ public class ProductionwarehousingActivity extends BaseActivity {
         if(Request.URL.equals(Request.URL_AR)){
             binding.lCboxno.setVisibility(View.VISIBLE);
 
+        }
+        if(getIntent().getStringExtra("cWhCode")!=null){
+            cwhcode=getIntent().getStringExtra("cWhCode");
         }
 
         sharedPreferences=getSharedPreferences("sp",MODE_PRIVATE);
@@ -313,6 +316,9 @@ public class ProductionwarehousingActivity extends BaseActivity {
             jsonObject.put("methodname","getInventoryBycode");
             jsonObject.put("acccode",acccode);
             jsonObject.put("cinvcode",cinvcode);
+            jsonObject.put("cWhCode",cwhcode);
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

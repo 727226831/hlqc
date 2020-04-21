@@ -3,7 +3,6 @@ package com.example.storescontrol.view;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -11,8 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Request;
-import com.example.storescontrol.Url.Untils;
+import com.example.storescontrol.url.Request;
+import com.example.storescontrol.url.Untils;
 
 
 public class PortActivity extends BaseActivity{

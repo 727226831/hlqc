@@ -19,9 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Request;
+import com.example.storescontrol.url.Request;
 import com.example.storescontrol.bean.ArrivalHeadBean;
-import com.example.storescontrol.Url.iUrl;
+import com.example.storescontrol.url.iUrl;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

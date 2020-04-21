@@ -2,11 +2,8 @@ package com.example.storescontrol.view.task;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,21 +16,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Request;
-import com.example.storescontrol.Url.Untils;
-import com.example.storescontrol.Url.iUrl;
-import com.example.storescontrol.bean.TROutBywhcodeBean;
+import com.example.storescontrol.url.Request;
+import com.example.storescontrol.url.Untils;
+import com.example.storescontrol.url.iUrl;
 import com.example.storescontrol.bean.TaskBean;
 import com.example.storescontrol.view.BaseActivity;
-import com.example.storescontrol.view.DetailListActivity;
-import com.example.storescontrol.view.LoginActivity;
-import com.example.storescontrol.view.ProductionListActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONException;

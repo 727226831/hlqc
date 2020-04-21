@@ -4,22 +4,13 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Untils;
+import com.example.storescontrol.url.Untils;
 import com.example.storescontrol.databinding.ActivityReportBinding;
 import com.example.storescontrol.view.BaseActivity;
 

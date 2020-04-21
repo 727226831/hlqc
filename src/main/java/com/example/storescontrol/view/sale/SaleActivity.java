@@ -17,12 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Request;
-import com.example.storescontrol.Url.Untils;
+import com.example.storescontrol.url.Request;
+import com.example.storescontrol.url.Untils;
 import com.example.storescontrol.bean.CreatesaleoutBean;
 import com.example.storescontrol.bean.DispatchdetailsBean;
 import com.example.storescontrol.view.BaseActivity;
-import com.example.storescontrol.view.DetailListActivity;
 import com.example.storescontrol.view.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 

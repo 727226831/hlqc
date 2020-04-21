@@ -1,4 +1,4 @@
-package com.example.storescontrol.Url;
+package com.example.storescontrol.url;
 
 import android.app.Activity;
 import android.text.TextUtils;

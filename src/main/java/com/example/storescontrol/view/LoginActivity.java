@@ -14,20 +14,15 @@ import android.widget.Toast;
 
 import com.example.storescontrol.BuildConfig;
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Request;
+import com.example.storescontrol.url.Request;
 import com.example.storescontrol.bean.LoginBean;
-import com.example.storescontrol.Url.iUrl;
+import com.example.storescontrol.url.iUrl;
 import com.example.storescontrol.databinding.ActivityLoginBinding;
-import com.example.storescontrol.service.DemoIntentService;
-import com.example.storescontrol.service.DemoPushService;
 import com.google.gson.Gson;
 import com.igexin.sdk.PushManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
-import java.util.Random;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;

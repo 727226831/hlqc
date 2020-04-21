@@ -1,7 +1,4 @@
-package com.example.storescontrol.Url;
-
-import android.content.SharedPreferences;
-import android.util.Log;
+package com.example.storescontrol.url;
 
 import java.util.concurrent.TimeUnit;
 

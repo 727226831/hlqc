@@ -1,11 +1,7 @@
 package com.example.storescontrol.view.task;
 
-import android.database.DatabaseUtils;
 import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,14 +9,13 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Request;
-import com.example.storescontrol.Url.Untils;
-import com.example.storescontrol.Url.iUrl;
+import com.example.storescontrol.url.Request;
+import com.example.storescontrol.url.Untils;
+import com.example.storescontrol.url.iUrl;
 import com.example.storescontrol.bean.LoginBean;
 import com.example.storescontrol.bean.TaskBean;
 import com.example.storescontrol.databinding.ActivityTaskBinding;
 import com.example.storescontrol.view.BaseActivity;
-import com.example.storescontrol.view.ProductionwarehousingActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONException;

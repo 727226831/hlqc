@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Request;
+import com.example.storescontrol.url.Request;
 import com.example.storescontrol.bean.LoginBean;
 import com.example.storescontrol.databinding.ActivityIndexBinding;
 import com.example.storescontrol.view.declaration.ReportActivity;
@@ -93,7 +93,7 @@ public class IndexActivity extends BaseActivity {
                         intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("材料出库")){
                         intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
-                    }else if(userinfoBean.getData().get(i).getMenuname().equals("销售出库")){
+                    }else if(userinfoBean.getData().get(i).getMenuname().equals("销售发货")){
                         intent  =new Intent(IndexActivity.this,DispatchActivity.class);
                     }else if(userinfoBean.getData().get(i).getMenuname().equals("调拨出库")){
                         intent  =new Intent(IndexActivity.this,ProductionListActivity.class);
@@ -120,6 +120,8 @@ public class IndexActivity extends BaseActivity {
             if(userinfoBean.getData().get(i).getMenuname().contains("入库")){
                 drawableLeft = IndexActivity.this.getResources().getDrawable(R.mipmap.ic_input);
             }else if(userinfoBean.getData().get(i).getMenuname().contains("出库")){
+                drawableLeft = IndexActivity.this.getResources().getDrawable(R.mipmap.ic_put);
+            }else if(userinfoBean.getData().get(i).getMenuname().contains("发货")){
                 drawableLeft = IndexActivity.this.getResources().getDrawable(R.mipmap.ic_put);
             }else if(userinfoBean.getData().get(i).getMenuname().contains("盘点")){
                 drawableLeft = IndexActivity.this.getResources().getDrawable(R.mipmap.ic_inventory);

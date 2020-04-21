@@ -13,10 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.storescontrol.R;
-import com.example.storescontrol.Url.Request;
-import com.example.storescontrol.Url.Untils;
+import com.example.storescontrol.url.Request;
+import com.example.storescontrol.url.Untils;
 import com.example.storescontrol.bean.TROutBywhcodeBean;
-import com.example.storescontrol.view.task.TaskActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
